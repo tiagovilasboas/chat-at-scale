@@ -41,9 +41,9 @@ Se você quer entender como eng de liderança técnica pensa e age, segue essa o
 5. **Visão de longo prazo** (~10 min) - [10 Evolução](./docs/pt-br/10-evolution.md)
 6. **Referência** (~20 min) - [O que é Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md), [Casos de Mensageria](./docs/pt-br/11-casos-mensageria.md), [SLOs](./docs/pt-br/slos.md), [Glossário](./docs/pt-br/glossario.md), [ADRs](./docs/adr/)
 
-*Tempos estimados para leitura em ritmo técnico (~200 palavras/min). Trilha completa (01–10): ~1h30.*
+*Tempos estimados para leitura em ritmo técnico (~200 palavras/min). Trilha completa (01-10): ~1h30.*
 
-O gate é simples: **não implemente até ter os docs 01–10 prontos**. Problema primeiro, código depois. Simples assim.
+O gate é simples: **não implemente até ter os docs 01-10 prontos**. Problema primeiro, código depois. Simples assim.
 
 ---
 

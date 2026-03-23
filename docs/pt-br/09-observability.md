@@ -246,6 +246,19 @@
 
 ---
 
+## 6. Estratégia de testes (ao implementar)
+
+| Tipo | O que cobrir | Ferramentas típicas |
+|------|--------------|---------------------|
+| **Unit** | Lógica de negócio isolada; validações; dedup, ordenação | Jest, Vitest, pytest |
+| **Integration** | Gateway + Messaging + Persistência; um fluxo completo | Testcontainers, mocks de DB |
+| **E2E** | Cliente envia, outro recebe; backfill; reconexão | Playwright, Cypress |
+| **Load** | 10k conexões; 1k msg/s; validar P99 latência (INV-010) | k6, Locust, Gatling |
+
+**Invariantes:** Cada invariante em [02 - Invariantes](./02-system-invariants.md) deve ter pelo menos um teste ou cenário que valide respeito. Ver checklist de validação.
+
+---
+
 ## Documentos relacionados
 
 - [02 - Invariantes do Sistema](./02-system-invariants.md) (auditoria INV-004)

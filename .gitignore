@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+.pnpm-store/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# Build output
+dist/
+build/
+out/
+*.exe
+target/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs and temp
+*.log
+tmp/
+temp/
+.cache/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Misc
+*.tgz
+.npm

@@ -207,7 +207,7 @@ Cada passo é incremental. Sem redesenho "para o mundo inteiro".
 | Risco | Fase | Mitigação |
 |-------|------|-----------|
 | Falha de nó único | 0–1 | Adicionar redundância de Gateway cedo |
-| DB vira gargalo | 1–2 | Cache; depois shard |
+| DB vira gargalo | 1-2 | Cache; depois shard |
 | Fan-out não cruza nós | 2 | Broker; session store |
 | Tempestade de backfill | 2–3 | Read replicas; jitter no cliente; rate limit |
 | Canal quente | 2–4 | Rate limit; ou mudança de produto para canais grandes |

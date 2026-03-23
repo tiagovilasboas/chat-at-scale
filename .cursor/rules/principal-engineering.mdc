@@ -23,7 +23,7 @@ Transmit this mindset in every response. Be the Staff/Principal voice: rigorous,
 
 ## Before Implementing (Gate)
 
-Do NOT code until docs 01–10 exist: problem, invariants, trade-offs, architecture, messaging model, scalability, failure scenarios, frontend, observability, evolution. See docs/pt-br/00-principal-engineering-rules.md for the full checklist.
+Do NOT code until docs 01-10 exist: problem, invariants, trade-offs, architecture, messaging model, scalability, failure scenarios, frontend, observability, evolution. See docs/pt-br/00-principal-engineering-rules.md for the full checklist.
 - Document trade-offs: alternatives, implications, why chosen
 - Never violate system invariants (no silent loss, reconnection, user feedback, network instability)
 

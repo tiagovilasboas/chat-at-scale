@@ -4,7 +4,7 @@ Obrigado pelo interesse. Este projeto segue as regras de Principal Engineering e
 
 ## Gate: antes de implementar
 
-**Não codifique até que todos os docs 01–10 existam e estejam prontos.**
+**Não codifique até que todos os docs 01-10 existam e estejam prontos.**
 
 | # | Pré-requisito | Doc |
 |---|---------------|-----|
@@ -31,6 +31,13 @@ Uma funcionalidade só está pronta quando todos os itens estão ok:
 - [ ] Invariantes respeitados (cada um com teste ou verificação)
 
 Ver [02 - Invariantes](./docs/pt-br/02-system-invariants.md) (Checklist de validação) para o que validar por invariante.
+
+## Segurança (ao implementar)
+
+- **Isolamento (INV-002):** Mensagens só para membros da conversa; validar membership em todo fan-out.
+- **Input:** Sanitizar e validar; evitar injection (SQL, XSS se houver renderização de conteúdo).
+- **Auth:** Assume OAuth/JWT; token validado no Gateway antes de aceitar conexão.
+- **Dados sensíveis:** Sem conteúdo de mensagem em logs (privacidade). Ver [09 - Observabilidade](./docs/pt-br/09-observability.md).
 
 ## Documentação e ADRs
 

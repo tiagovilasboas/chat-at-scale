@@ -45,7 +45,7 @@ All frontend decisions and implementations in this project follow the playbook.
 
 - Framework, architectural pattern, build, deploy decisions: require ADR in `docs/adr/`.
 - Template: Status, Date, Context, Decision, Alternatives, Consequences.
-- 1–2 pages. Never delete; evolve with "Superseded by ADR-XXX".
+- 1-2 pages. Never delete; evolve with "Superseded by ADR-XXX".
 
 ## Pitfalls to avoid
 

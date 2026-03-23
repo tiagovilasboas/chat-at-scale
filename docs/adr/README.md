@@ -29,6 +29,6 @@ Requerimento do [Frontend Architecture Playbook](https://frontend-architecture-p
 ## Regras
 
 - **Idioma:** Português. Termos técnicos em inglês.
-- **Tamanho:** 1–2 páginas. Se precisar mais, considere um RFC.
+- **Tamanho:** 1-2 páginas. Se precisar mais, considere um RFC.
 - **Evolução:** Nunca apague. Marque como "Substituído por ADR-XXX".
 - **Status:** Proposto → Aceito → Depreciado | Substituído por ADR-XXX
