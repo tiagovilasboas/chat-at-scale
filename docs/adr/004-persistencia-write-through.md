@@ -42,6 +42,6 @@ Write-through: persistir no banco antes de enviar ack ao remetente. Ack implica 
 
 ## Referências
 
-- [03 — Trade-offs](../pt-br/03-trade-offs.md)
-- [02 — Invariantes (INV-007)](../pt-br/02-system-invariants.md)
-- [04 — Arquitetura](../pt-br/04-architecture.md)
+- [03 - Trade-offs](../pt-br/03-trade-offs.md)
+- [02 - Invariantes (INV-007)](../pt-br/02-system-invariants.md)
+- [04 - Arquitetura](../pt-br/04-architecture.md)

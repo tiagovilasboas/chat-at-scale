@@ -1,4 +1,4 @@
-# 10 — Evolução em Produção
+# 10 - Evolução em Produção
 
 > Como este sistema evoluiria quando implantado em ambiente de produção real: o que muda, o que quebra primeiro e o que exige redesenho.
 
@@ -217,6 +217,6 @@ Cada passo é incremental. Sem redesenho "para o mundo inteiro".
 
 ## Documentos relacionados
 
-- [01 — Definição do Problema](./01-problem-definition.md)
-- [04 — Arquitetura](./04-architecture.md)
-- [06 — Escalabilidade](./06-scalability.md)
+- [01 - Definição do Problema](./01-problem-definition.md)
+- [04 - Arquitetura](./04-architecture.md)
+- [06 - Escalabilidade](./06-scalability.md)

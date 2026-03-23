@@ -46,6 +46,6 @@ At-least-once como garantia de entrega. Cliente deduplica por message_id (INV-00
 
 ## Referências
 
-- [03 — Trade-offs](../pt-br/03-trade-offs.md)
-- [05 — Modelo de Mensagens](../pt-br/05-messaging-model.md)
-- [02 — Invariantes (INV-003, INV-004, INV-005)](../pt-br/02-system-invariants.md)
+- [03 - Trade-offs](../pt-br/03-trade-offs.md)
+- [05 - Modelo de Mensagens](../pt-br/05-messaging-model.md)
+- [02 - Invariantes (INV-003, INV-004, INV-005)](../pt-br/02-system-invariants.md)

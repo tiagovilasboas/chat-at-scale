@@ -1,4 +1,4 @@
-# 12 — Staff e Principal: o que é, o que diferencia
+# 12 - Staff e Principal: o que é, o que diferencia
 
 > Referência do mercado para entender a atuação e o pensamento de Staff e Principal Engineers. Baseado em fontes públicas (Will Larson, LeadDev, DataAnnotation, CTO Executive Insights).
 
@@ -94,17 +94,17 @@ O papel não é só técnico. Você abre mão de coisas e ganha outras. O mindse
 
 | Fonte | O que aborda |
 |-------|--------------|
-| [Staff Engineer — Will Larson](https://staffeng.com/book/) | Livro e site; quatro arquétipos; liderança técnica sem gestão |
+| [Staff Engineer: Will Larson](https://staffeng.com/book/) | Livro e site; quatro arquétipos; liderança técnica sem gestão |
 | [Staff Eng Guides](https://staffeng.com/guides/staff-archetypes) | Arquétipos Tech Lead, Architect, Solver, Right Hand |
-| [LeadDev — Staff, Principal, Distinguished](https://leaddev.com/career-ladders/who-are-staff-principal-and-distinguished-engineers) | Diferenças de escopo e impacto |
-| [Staff vs Principal — DataAnnotation](https://www.dataannotation.tech/developers/staff-vs-principal-engineer) | Scope, ownership, influência |
-| [Principal Engineer em orgs 50+ — CTO Executive Insights](https://ctoexecutiveinsights.com/blog/principal-engineer-role-at-50-engineer-orgs) | Responsabilidades e escopo |
-| [Senior vs Staff — Fellow](https://fellow.ai/blog/engineering-staff-engineer-vs-senior-engineer) | Virada Senior→Staff; tempo em código vs estratégia |
+| [LeadDev: Staff, Principal, Distinguished](https://leaddev.com/career-ladders/who-are-staff-principal-and-distinguished-engineers) | Diferenças de escopo e impacto |
+| [Staff vs Principal: DataAnnotation](https://www.dataannotation.tech/developers/staff-vs-principal-engineer) | Scope, ownership, influência |
+| [Principal Engineer em orgs 50+: CTO Executive Insights](https://ctoexecutiveinsights.com/blog/principal-engineer-role-at-50-engineer-orgs) | Responsabilidades e escopo |
+| [Senior vs Staff: Fellow](https://fellow.ai/blog/engineering-staff-engineer-vs-senior-engineer) | Virada Senior→Staff; tempo em código vs estratégia |
 
 ---
 
 ## Documentos relacionados
 
-- [00 — Regras Principais](./00-principal-engineering-rules.md): o que um Staff/Principal considera antes de implementar
-- [03 — Trade-offs](./03-trade-offs.md): exemplo de decisões com alternativas explícitas
-- [11 — Casos de Mensageria](./11-casos-mensageria.md): casos reais para citar em discussões
+- [00 - Regras Principais](./00-principal-engineering-rules.md): o que um Staff/Principal considera antes de implementar
+- [03 - Trade-offs](./03-trade-offs.md): exemplo de decisões com alternativas explícitas
+- [11 - Casos de Mensageria](./11-casos-mensageria.md): casos reais para citar em discussões

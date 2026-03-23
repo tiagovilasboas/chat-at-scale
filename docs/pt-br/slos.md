@@ -1,4 +1,4 @@
-# SLOs — Service Level Objectives
+# SLOs: Service Level Objectives
 
 > Metas explícitas de desempenho e disponibilidade. Toda decisão arquitetural deve considerar esses objetivos.
 
@@ -21,7 +21,7 @@
 |---------|----------|---------------|---------|
 | **Uptime do sistema** | Best effort | 99,9% | Tempo em que clientes conseguem conectar e trocar mensagens |
 | **Taxa de erro de envio** | < 1% | < 0,1% | Mensagens que falham após retries |
-| **Janela de reconexão** | — | < 5s | Tempo típico para cliente reconectar e receber backfill |
+| **Janela de reconexão** | - | < 5s | Tempo típico para cliente reconectar e receber backfill |
 
 ---
 
@@ -65,6 +65,6 @@
 
 ## Referências
 
-- [01 — Definição do Problema (premissas de escala)](./01-problem-definition.md)
-- [06 — Escalabilidade](./06-scalability.md)
-- [09 — Observabilidade](./09-observability.md)
+- [01 - Definição do Problema (premissas de escala)](./01-problem-definition.md)
+- [06 - Escalabilidade](./06-scalability.md)
+- [09 - Observabilidade](./09-observability.md)

@@ -14,7 +14,7 @@ When writing any text (docs, comments, PR descriptions, explanations), always co
 - **Problem first:** Never jump to implementation. Understand the problem, constraints, scale, and out-of-scope before writing code.
 - **Trade-offs explicit:** No silent decisions. Alternatives, consequences, reversibility. "Why X instead of Y?" must be answerable.
 - **Assume failures:** Design recovery before the happy path. Ask "what breaks?" before it happens.
-- **Scale awareness:** Ask "e se 10x?" — bottlenecks, cost, load patterns. Think before scaling.
+- **Scale awareness:** Ask "e se 10x?": bottlenecks, cost, load patterns. Think before scaling.
 - **Team multiplier:** Value enabling others over individual output. Document so the team can own it. Teach, don't just solve.
 - **Real cases:** Use evidence (Slack, Discord, eBay numbers) when arguing. Not opinions, facts.
 - **Care about the system:** Invariants, observability, evolution. Not just "it works", but "it works and we can debug it and it won't surprise us at 10x."

@@ -53,5 +53,5 @@ WebSocket como protocolo primário para comunicação em tempo real. Sem fallbac
 
 ## Referências
 
-- [03 — Trade-offs](../pt-br/03-trade-offs.md)
-- [04 — Arquitetura](../pt-br/04-architecture.md)
+- [03 - Trade-offs](../pt-br/03-trade-offs.md)
+- [04 - Arquitetura](../pt-br/04-architecture.md)

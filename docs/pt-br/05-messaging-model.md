@@ -1,4 +1,4 @@
-# 05 — Modelo de Mensagens
+# 05 - Modelo de Mensagens
 
 > Semântica central de entrega, ordenação, retries e tratamento offline. Este documento define o contrato entre cliente e servidor.
 
@@ -254,7 +254,7 @@ Usuários offline por dias: backfill pode retornar muitas mensagens. Cliente pod
 
 ## Documentos relacionados
 
-- [01 — Definição do Problema](./01-problem-definition.md)
-- [02 — Invariantes do Sistema](./02-system-invariants.md)
-- [03 — Trade-offs](./03-trade-offs.md)
-- [04 — Arquitetura](./04-architecture.md)
+- [01 - Definição do Problema](./01-problem-definition.md)
+- [02 - Invariantes do Sistema](./02-system-invariants.md)
+- [03 - Trade-offs](./03-trade-offs.md)
+- [04 - Arquitetura](./04-architecture.md)

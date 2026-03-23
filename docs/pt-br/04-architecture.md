@@ -1,4 +1,4 @@
-# 04 — Arquitetura
+# 04 - Arquitetura
 
 > Visão geral dos componentes, responsabilidades e fluxo de dados. Clareza sobre complexidade.
 
@@ -202,6 +202,6 @@ Gateway e Messaging podem ser um processo por simplicidade. Fan-out in-memory.
 
 ## Documentos relacionados
 
-- [01 — Definição do Problema](./01-problem-definition.md)
-- [02 — Invariantes do Sistema](./02-system-invariants.md)
-- [03 — Trade-offs](./03-trade-offs.md)
+- [01 - Definição do Problema](./01-problem-definition.md)
+- [02 - Invariantes do Sistema](./02-system-invariants.md)
+- [03 - Trade-offs](./03-trade-offs.md)

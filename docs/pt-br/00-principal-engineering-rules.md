@@ -1,4 +1,4 @@
-# 00 — Regras Principais de Engenharia
+# 00 - Regras Principais de Engenharia
 
 > Este projeto não é sobre criar uma UI de chat. É sobre projetar um sistema de mensagens distribuído que evolui do MVP até escala. Cada decisão deve refletir pensamento sistêmico, trade-offs explícitos, consciência de escalabilidade e tratamento de falhas.
 
@@ -59,7 +59,7 @@ Toda funcionalidade deve respeitar os invariantes do sistema:
 - O usuário deve sempre ter feedback (enviando, enviado, falhou)
 - O sistema deve tolerar instabilidade de rede
 
-**Nunca implemente nada que viole isso.** Veja [02 — Invariantes do Sistema](./02-system-invariants.md).
+**Nunca implemente nada que viole isso.** Veja [02 - Invariantes do Sistema](./02-system-invariants.md).
 
 ---
 
@@ -73,7 +73,7 @@ Toda decisão técnica deve incluir:
 
 Exemplos: WebSocket vs polling; at-least-once vs at-most-once; consistência forte vs eventual.
 
-**Sem decisões silenciosas.** Veja [03 — Trade-offs](./03-trade-offs.md).
+**Sem decisões silenciosas.** Veja [03 - Trade-offs](./03-trade-offs.md).
 
 ---
 
@@ -87,7 +87,7 @@ Isto é um sistema de mensagens. Sempre considere:
 - deduplicação
 - cenários offline
 
-**Se sua solução ignora algum desses, está incompleta.** Veja [05 — Modelo de Mensagens](./05-messaging-model.md).
+**Se sua solução ignora algum desses, está incompleta.** Veja [05 - Modelo de Mensagens](./05-messaging-model.md).
 
 ---
 
@@ -101,7 +101,7 @@ O frontend NÃO é só UI. Ele deve lidar com:
 - mensagens fora de ordem
 - inconsistência temporária
 
-Projete de acordo. Veja [08 — Frontend como Sistema](./08-frontend-as-a-system.md).
+Projete de acordo. Veja [08 - Frontend como Sistema](./08-frontend-as-a-system.md).
 
 ---
 
@@ -121,7 +121,7 @@ Sempre pergunte:
 - O que acontece com 10.000 usuários?
 - O que acontece com 1 milhão de usuários?
 
-Considere: fan-out, gargalos, gerenciamento de estado sob carga. Veja [06 — Escalabilidade](./06-scalability.md).
+Considere: fan-out, gargalos, gerenciamento de estado sob carga. Veja [06 - Escalabilidade](./06-scalability.md).
 
 ---
 
@@ -134,7 +134,7 @@ Assuma que as coisas vão falhar:
 - entrega atrasada
 - falha parcial do sistema
 
-**Projete estratégias de recuperação antes do happy path.** Veja [07 — Cenários de Falha](./07-failure-scenarios.md).
+**Projete estratégias de recuperação antes do happy path.** Veja [07 - Cenários de Falha](./07-failure-scenarios.md).
 
 ---
 
@@ -146,7 +146,7 @@ Respeite responsabilidades claras:
 - **Sistema de mensagens:** garantias de entrega
 - **Backend:** persistência e distribuição
 
-Não misture responsabilidades sem justificativa. Veja [04 — Arquitetura](./04-architecture.md).
+Não misture responsabilidades sem justificativa. Veja [04 - Arquitetura](./04-architecture.md).
 
 ---
 
@@ -158,7 +158,7 @@ O código deve ser depurável. Inclua:
 - visibilidade do ciclo de vida das mensagens
 - capacidade de rastrear falhas
 
-Veja [09 — Observabilidade](./09-observability.md).
+Veja [09 - Observabilidade](./09-observability.md).
 
 ---
 

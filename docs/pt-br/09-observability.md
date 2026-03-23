@@ -1,4 +1,4 @@
-# 09 — Observabilidade
+# 09 - Observabilidade
 
 > Logs, métricas e estratégias de debug para operações e resposta a incidentes.
 
@@ -248,6 +248,6 @@
 
 ## Documentos relacionados
 
-- [02 — Invariantes do Sistema](./02-system-invariants.md) (auditoria INV-004)
-- [04 — Arquitetura](./04-architecture.md)
-- [07 — Cenários de Falha](./07-failure-scenarios.md)
+- [02 - Invariantes do Sistema](./02-system-invariants.md) (auditoria INV-004)
+- [04 - Arquitetura](./04-architecture.md)
+- [07 - Cenários de Falha](./07-failure-scenarios.md)

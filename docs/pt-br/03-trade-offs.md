@@ -1,4 +1,4 @@
-# 03 — Trade-offs
+# 03 - Trade-offs
 
 > Decisões arquiteturais envolvem **trade-offs explícitos**. Este documento lista escolhas principais, opções e justificativas.
 
@@ -152,5 +152,5 @@ Não adicionamos fallback de long-polling no MVP. Aumenta complexidade (dois cam
 
 ## Documentos relacionados
 
-- [01 — Definição do Problema](./01-problem-definition.md)
-- [02 — Invariantes do Sistema](./02-system-invariants.md)
+- [01 - Definição do Problema](./01-problem-definition.md)
+- [02 - Invariantes do Sistema](./02-system-invariants.md)

@@ -50,6 +50,6 @@ Ordem total por conversa. Servidor atribui número de sequence monotônico por c
 
 ## Referências
 
-- [03 — Trade-offs](../pt-br/03-trade-offs.md)
-- [05 — Modelo de Mensagens](../pt-br/05-messaging-model.md)
-- [02 — Invariantes (INV-008)](../pt-br/02-system-invariants.md)
+- [03 - Trade-offs](../pt-br/03-trade-offs.md)
+- [05 - Modelo de Mensagens](../pt-br/05-messaging-model.md)
+- [02 - Invariantes (INV-008)](../pt-br/02-system-invariants.md)

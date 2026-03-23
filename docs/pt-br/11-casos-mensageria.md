@@ -1,4 +1,4 @@
-# 11 — Casos Reais de Mensageria (todo Staff/Principal deve conhecer)
+# 11 - Casos Reais de Mensageria (todo Staff/Principal deve conhecer)
 
 > Casos de empresas que escalaram mensageria em tempo real. Cada um com link para o artigo ou tech blog original.
 
@@ -10,7 +10,7 @@ Leve o link para a reunião quando defender decisões de arquitetura. Cite em AD
 
 ---
 
-## 1. Slack — Real-time Messaging
+## 1. Slack: Real-time Messaging
 
 | Aspecto | Descrição |
 |---------|-----------|
@@ -22,7 +22,7 @@ Leve o link para a reunião quando defender decisões de arquitetura. Cite em AD
 
 ---
 
-## 2. Discord — Billions → Trillions of Messages
+## 2. Discord: Billions → Trillions of Messages
 
 | Aspecto | Descrição |
 |---------|-----------|
@@ -34,7 +34,7 @@ Leve o link para a reunião quando defender decisões de arquitetura. Cite em AD
 
 ---
 
-## 3. WhatsApp — Erlang e 2B+ usuários
+## 3. WhatsApp: Erlang e 2B+ usuários
 
 | Aspecto | Descrição |
 |---------|-----------|
@@ -46,7 +46,7 @@ Leve o link para a reunião quando defender decisões de arquitetura. Cite em AD
 
 ---
 
-## 4. Slack — Message Fanout
+## 4. Slack: Message Fanout
 
 | Aspecto | Descrição |
 |---------|-----------|
@@ -57,7 +57,7 @@ Leve o link para a reunião quando defender decisões de arquitetura. Cite em AD
 
 ---
 
-## 5. Discord — Indexação de trilhões
+## 5. Discord: Indexação de trilhões
 
 | Aspecto | Descrição |
 |---------|-----------|
@@ -70,13 +70,13 @@ Leve o link para a reunião quando defender decisões de arquitetura. Cite em AD
 
 ## Casos complementares (frontend)
 
-Para performance de UI e entregabilidade, veja também: [Frontend Architecture Playbook — 19 Casos](https://frontend-architecture-playbook-eight.vercel.app/guides/cases) (Netflix, Shopify, Slack desktop, eBay, etc.).
+Para performance de UI e entregabilidade, veja também: [Frontend Architecture Playbook: 19 Casos](https://frontend-architecture-playbook-eight.vercel.app/guides/cases) (Netflix, Shopify, Slack desktop, eBay, etc.).
 
 ---
 
 ## Documentos relacionados
 
-- [04 — Arquitetura](./04-architecture.md)
-- [06 — Escalabilidade](./06-scalability.md)
-- [10 — Evolução](./10-evolution.md)
-- [docs/adr/](../adr/) — ADRs do projeto
+- [04 - Arquitetura](./04-architecture.md)
+- [06 - Escalabilidade](./06-scalability.md)
+- [10 - Evolução](./10-evolution.md)
+- [docs/adr/](../adr/): ADRs do projeto

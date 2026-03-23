@@ -1,4 +1,4 @@
-# 02 — Invariantes do Sistema
+# 02 - Invariantes do Sistema
 
 > **Invariantes** são propriedades que o sistema **sempre** mantém, independente de carga, falhas ou estado. Violar um invariante indica bug ou design incorreto.
 
@@ -143,5 +143,5 @@
 
 ## Documentos relacionados
 
-- [01 — Definição do Problema](./01-problem-definition.md)
-- [03 — Trade-offs](./03-trade-offs.md)
+- [01 - Definição do Problema](./01-problem-definition.md)
+- [03 - Trade-offs](./03-trade-offs.md)

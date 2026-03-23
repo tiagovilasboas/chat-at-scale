@@ -1,4 +1,4 @@
-# 01 — Definição do Problema
+# 01 - Definição do Problema
 
 > Sistema de mensagens em tempo real que evolui de um MVP simples para uma plataforma escalável.  
 > **Princípio:** Otimize pela clareza das decisões e do design sistêmico, não por código perfeito.
@@ -143,5 +143,5 @@ A arquitetura deve evoluir do MVP para escala **sem reescrita**. Componentes cr�
 
 ## Documentos relacionados
 
-- [02 — Invariantes do Sistema](./02-system-invariants.md)
-- [03 — Trade-offs](./03-trade-offs.md)
+- [02 - Invariantes do Sistema](./02-system-invariants.md)
+- [03 - Trade-offs](./03-trade-offs.md)

@@ -1,4 +1,4 @@
-# 07 — Cenários de Falha e Recuperação
+# 07 - Cenários de Falha e Recuperação
 
 > Modos de falha e como o sistema detecta, trata e se recupera deles.
 
@@ -260,6 +260,6 @@ Se cliente tem seq 9 e 11, lacuna em 10. Cliente pode solicitar `backfill(conv, 
 
 ## Documentos relacionados
 
-- [02 — Invariantes do Sistema](./02-system-invariants.md)
-- [05 — Modelo de Mensagens](./05-messaging-model.md)
-- [04 — Arquitetura](./04-architecture.md)
+- [02 - Invariantes do Sistema](./02-system-invariants.md)
+- [05 - Modelo de Mensagens](./05-messaging-model.md)
+- [04 - Arquitetura](./04-architecture.md)

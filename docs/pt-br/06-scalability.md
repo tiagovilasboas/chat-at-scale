@@ -1,4 +1,4 @@
-# 06 — Considerações de Escalabilidade
+# 06 - Considerações de Escalabilidade
 
 > Padrões de carga, gargalos e estratégias de escala para a plataforma de mensagens.
 
@@ -254,6 +254,6 @@ Para sistema de 1k msg/s em geral, com mix:
 
 ## 6. Documentos relacionados
 
-- [01 — Definição do Problema](./01-problem-definition.md)
-- [04 — Arquitetura](./04-architecture.md)
-- [05 — Modelo de Mensagens](./05-messaging-model.md)
+- [01 - Definição do Problema](./01-problem-definition.md)
+- [04 - Arquitetura](./04-architecture.md)
+- [05 - Modelo de Mensagens](./05-messaging-model.md)

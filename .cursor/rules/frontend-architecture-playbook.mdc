@@ -1,5 +1,5 @@
 ---
-description: Base and rules from Frontend Architecture Playbook — Dependency Rule, Clean Architecture, ADR, repository layer
+description: Base and rules from Frontend Architecture Playbook: Dependency Rule, Clean Architecture, ADR, repository layer
 alwaysApply: true
 ---
 
@@ -19,8 +19,8 @@ All frontend decisions and implementations in this project follow the playbook.
 
 ## Principles
 
-- **DRY, KISS, YAGNI** — don't duplicate, don't overcomplicate, don't anticipate
-- **SRP, SoC, Clean Code** — single responsibility, separation of concerns
+- **DRY, KISS, YAGNI**: don't duplicate, don't overcomplicate, don't anticipate
+- **SRP, SoC, Clean Code**: single responsibility, separation of concerns
 - **Golden rule:** if logic fits in 3 lines in the component, no use case needed. If it has validation, calculation, orchestration, or business rules, then yes.
 
 ## Repository Pattern

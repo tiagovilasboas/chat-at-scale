@@ -1,4 +1,4 @@
-# 08 — Frontend como Parte do Sistema Distribuído
+# 08 - Frontend como Parte do Sistema Distribuído
 
 > O cliente não é uma UI burra. Ele participa do sistema distribuído: mantém estado, reconcilia com o servidor, trata falhas e mantém consistência localmente.
 
@@ -325,6 +325,6 @@ Na transição para **connected**, executar backfill das conversas inscritas. Em
 
 ## Documentos relacionados
 
-- [03 — Trade-offs](./03-trade-offs.md) (Responsabilidades frontend vs backend)
-- [05 — Modelo de Mensagens](./05-messaging-model.md)
-- [07 — Cenários de Falha](./07-failure-scenarios.md)
+- [03 - Trade-offs](./03-trade-offs.md) (Responsabilidades frontend vs backend)
+- [05 - Modelo de Mensagens](./05-messaging-model.md)
+- [07 - Cenários de Falha](./07-failure-scenarios.md)
