@@ -1,0 +1,60 @@
+---
+description: Base and rules from Frontend Architecture Playbook — Dependency Rule, Clean Architecture, ADR, repository layer
+alwaysApply: true
+---
+
+# Frontend Architecture Playbook (Mandatory Rules)
+
+**Authoritative source:** [Frontend Architecture Playbook](https://frontend-architecture-playbook-eight.vercel.app/)
+
+All frontend decisions and implementations in this project follow the playbook.
+
+## Dependency Rule (Foundation)
+
+- **Outer layers may use inner layers; inner layers never use outer layers.** Imports always point inward.
+- Core (domain): does not import UI, business rules, or data access. Only types and pure rules.
+- Repository: only imports the core.
+- Service/use case: may import repository and domain. Never the UI.
+- UI (screen): may import what it needs. Does not access API/database directly.
+
+## Principles
+
+- **DRY, KISS, YAGNI** — don't duplicate, don't overcomplicate, don't anticipate
+- **SRP, SoC, Clean Code** — single responsibility, separation of concerns
+- **Golden rule:** if logic fits in 3 lines in the component, no use case needed. If it has validation, calculation, orchestration, or business rules, then yes.
+
+## Repository Pattern
+
+- API calls in repository layer (`lib/repositories/`), never `fetch` or `axios` directly in UI.
+- Interface defines the contract; adapter implements (API, mock, cache).
+- Business logic does not know where data comes from.
+
+## Clean Architecture in frontend
+
+- Entities: pure functions/types, no React, no fetch.
+- Use cases: custom hooks that orchestrate entities + ports.
+- Port + Adapter: interface in domain, implementation in infrastructure.
+- DI: Context or props to inject dependencies.
+
+## Folder structure
+
+- Feature-based: each feature contains domain, application, infrastructure, ui.
+- Avoid layer-based when there are many features (hard to navigate).
+
+## ADR (Architecture Decision Records)
+
+- Framework, architectural pattern, build, deploy decisions: require ADR in `docs/adr/`.
+- Template: Status, Date, Context, Decision, Alternatives, Consequences.
+- 1–2 pages. Never delete; evolve with "Superseded by ADR-XXX".
+
+## Pitfalls to avoid
+
+- Over-engineering: Clean Architecture for a simple MVP is overkill.
+- Circular dependencies: use case must not import UI.
+- Anemic domain: entities must have behavior, not just getters.
+- Complex repository: data access only; business logic elsewhere.
+
+## Full reference
+
+- **19 real cases** every Staff/Principal should know (Netflix, Spotify, Slack, eBay, Shopify, etc.): [guides/cases](https://frontend-architecture-playbook-eight.vercel.app/guides/cases)
+- Detailed guides, decision wizard, architecture comparison: [frontend-architecture-playbook-eight.vercel.app](https://frontend-architecture-playbook-eight.vercel.app/)

@@ -1,0 +1,39 @@
+---
+description: Principal Engineering rules for chat-at-scale: system thinking, trade-offs, failure handling
+alwaysApply: true
+---
+
+# Principal Engineering Rules
+
+This project designs a distributed messaging system, not a chat UI. Every decision must reflect system thinking and explicit trade-offs.
+
+## Before Implementing (Gate)
+
+Do NOT code until docs 01–10 exist: problem, invariants, trade-offs, architecture, messaging model, scalability, failure scenarios, frontend, observability, evolution. See docs/pt-br/00-principal-engineering-rules.md for the full checklist.
+- Document trade-offs: alternatives, implications, why chosen
+- Never violate system invariants (no silent loss, reconnection, user feedback, network instability)
+
+## Messaging Model
+
+Always consider: delivery guarantees, ordering, retries, deduplication, offline scenarios. Ignoring any = incomplete solution.
+
+## Frontend
+
+Frontend is a distributed system node. Handle: optimistic updates, reconciliation, duplicates, out-of-order, temporary inconsistency.
+
+## Scalability and Failure
+
+- Ask: 10 users? 10k? 1M? Consider fan-out, bottlenecks, state under load
+- Assume network drops, duplicates, delays, partial failures. Design recovery before happy path
+
+## Done
+
+Feature done only when: works + trade-offs documented + failure scenarios considered + invariants respected.
+
+## Documentation language
+
+Documentation is always created in **Portuguese first**. Technical terms remain in English (WebSocket, fan-out, backfill, etc.).
+
+**Travessão (—) e hífen (-):** Use somente na numeração (ex.: "1. Item - Descrição", "00 - Título"). Em parágrafos e frases, use vírgula ou dois pontos, nunca travessão.
+
+Full rules: docs/pt-br/00-principal-engineering-rules.md
