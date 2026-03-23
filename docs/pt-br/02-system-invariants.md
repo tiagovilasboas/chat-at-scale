@@ -141,6 +141,31 @@
 
 ---
 
+## Checklist de validação (implementação)
+
+Ao implementar, garanta pelo menos uma verificação por invariante:
+
+| Invariante | O que validar |
+|------------|---------------|
+| INV-001 | Checksum ou hash envio vs recebimento |
+| INV-002 | Só membros da conversa recebem; auditoria de membership |
+| INV-003 | IDs únicos no storage; sem reutilização |
+| INV-004 | Teste e2e: acked vs delivered; alerta em divergência |
+| INV-005 | Backfill fecha lacunas; tracking por participante |
+| INV-006 | Desconectar, enviar, reconectar; backfill completo |
+| INV-007 | Kill após ack; mensagem não perdida (ou risco aceito) |
+| INV-008 | Teste multi-cliente: mesma sequência para todos |
+| INV-009 | Enviar; mensagem aparece no stream sem refresh |
+| INV-010 | Load test; P99 latência monitorado |
+| INV-011 | Reconnect + backfill; sem lacunas permanentes |
+| INV-012 | Auditoria: nenhuma mensagem sem remetente válido |
+| INV-013 | Join/leave refletido; fan-out usa membership atual |
+| INV-014 | Histórico monotônico; sequence sem saltos |
+
+Use como critério de aceite em PRs. Ver [00 - Regras Principais](./00-principal-engineering-rules.md) (Definição de Pronto).
+
+---
+
 ## Documentos relacionados
 
 - [01 - Definição do Problema](./01-problem-definition.md)

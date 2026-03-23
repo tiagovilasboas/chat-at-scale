@@ -92,6 +92,8 @@ Guarde pra usar em reunião, ADR ou proposta. Números e fontes reais.
 | 12 | [O que é Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md) |
 | - | [SLOs](./docs/pt-br/slos.md) · [Glossário](./docs/pt-br/glossario.md) · [ADRs](./docs/adr/) |
 
+Contribuindo: [CONTRIBUTING.md](CONTRIBUTING.md) (gate, checklist de feature pronta).
+
 ---
 
 ## Executando

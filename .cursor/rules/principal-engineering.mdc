@@ -42,7 +42,14 @@ Frontend is a distributed system node. Handle: optimistic updates, reconciliatio
 
 ## Done
 
-Feature done only when: works + trade-offs documented + failure scenarios considered + invariants respected.
+Feature done only when all are checked:
+
+- [ ] Works (happy path + recovery)
+- [ ] Trade-offs documented (ADR or doc: alternatives, consequences)
+- [ ] Failure scenarios considered (what breaks, how to recover)
+- [ ] Invariants respected (each with test or verification)
+
+No silent "done". Tick before merge.
 
 ## Documentation language
 

@@ -190,12 +190,12 @@ Evite:
 
 Uma funcionalidade só está pronta quando:
 
-- funciona
-- trade-offs estão documentados
-- cenários de falha foram considerados
-- respeita invariantes do sistema
+- [ ] Funciona (happy path e recuperação)
+- [ ] Trade-offs documentados (ADR ou doc; alternativas, consequências)
+- [ ] Cenários de falha considerados (o que quebra, como recuperar)
+- [ ] Invariantes respeitados (cada um com teste ou verificação)
 
-**Quando implementar:** Use invariantes como critérios de aceite explícitos. Cada invariante deve ter pelo menos um teste ou verificação que valide respeito. Sem isso, "respeita invariantes" vira afirmação vazia.
+**Quando implementar:** Use invariantes como critérios de aceite explícitos. Cada invariante deve ter pelo menos um teste ou verificação que valide respeito. Sem isso, "respeita invariantes" vira afirmação vazia. Marque cada item antes de dar merge.
 
 ---
 
