@@ -8,6 +8,8 @@
 
 Esse projeto nasceu de uma pergunta de processo seletivo: *"Como você escalaria uma aplicação XPTO?"* Resolvi responder a sério usando chat como caso: em vez de só falar no abstract, montei um design completo com docs, ADRs e referências, e usei isso como portfolio de pensamento técnico.
 
+**Por que chat?** Chat é um dos tipos de aplicação completa mais complexos que existem. Exige real-time, consistência, fan-out, reconexão, frontend como nó do sistema, observabilidade, evolução em escala. Não é CRUD com WebSocket grudado. Exercita tudo o que um Staff/Principal precisa saber: sistemas distribuídos, trade-offs, falhas, invariantes. Casos reais (Slack, Discord, WhatsApp) mostram que o problema é sério.
+
 ---
 
 ## O que rola aqui

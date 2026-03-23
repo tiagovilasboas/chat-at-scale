@@ -19,7 +19,9 @@ Um **sistema de chat em tempo real** que escala do MVP até uma plataforma de me
 | **Resiliência a falhas** | Tolera falhas de componentes e de rede |
 | **Alta concorrência** | Milhares de conexões simultâneas, suporte a bursts |
 
-Um **desafio de sistemas distribuídos** : toda decisão envolve trade-offs explícitos entre consistência, disponibilidade, latência e custo.
+Um **desafio de sistemas distribuídos**: toda decisão envolve trade-offs explícitos entre consistência, disponibilidade, latência e custo.
+
+**Por que chat?** Chat é um dos tipos de aplicação completa mais complexos que existem. Exige real-time, consistência, fan-out, reconexão, frontend como nó do sistema, observabilidade e evolução em escala. Exercita tudo o que um Staff/Principal precisa dominar. Casos reais (Slack, Discord, WhatsApp) provam que o problema é sério. Ver [11 - Casos de Mensageria](./11-casos-mensageria.md).
 
 ---
 
