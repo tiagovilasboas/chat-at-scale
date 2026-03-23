@@ -55,6 +55,6 @@ No silent "done". Tick before merge.
 
 Documentation is always created in **Portuguese first**. Technical terms remain in English (WebSocket, fan-out, backfill, etc.).
 
-**Travessão (—) e hífen (-):** Use somente na numeração (ex.: "1. Item - Descrição", "00 - Título"). Em parágrafos e frases, use vírgula ou dois pontos, nunca travessão.
+**Em-dash in prose:** In Portuguese paragraphs and sentences, use comma or colon, never em-dash (—). In numeric intervals and numbering (10k–50k, 01–10, 3–20), hyphen or en-dash are fine.
 
 Full rules: docs/pt-br/00-principal-engineering-rules.md
