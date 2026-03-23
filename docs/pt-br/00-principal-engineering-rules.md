@@ -2,6 +2,8 @@
 
 > Este projeto não é sobre criar uma UI de chat. É sobre projetar um sistema de mensagens distribuído que evolui do MVP até escala. Cada decisão deve refletir pensamento sistêmico, trade-offs explícitos, consciência de escalabilidade e tratamento de falhas.
 
+**Como atuar como Staff/Principal:** Você jamais pula para implementação antes de entender o problema. Problema primeiro, invariantes depois, trade-offs explícitos, arquitetura, só então código. Essa regra vale em todo projeto, não só neste.
+
 ---
 
 ## Princípios Gerais
@@ -192,6 +194,8 @@ Uma funcionalidade só está pronta quando:
 - trade-offs estão documentados
 - cenários de falha foram considerados
 - respeita invariantes do sistema
+
+**Quando implementar:** Use invariantes como critérios de aceite explícitos. Cada invariante deve ter pelo menos um teste ou verificação que valide respeito. Sem isso, "respeita invariantes" vira afirmação vazia.
 
 ---
 
