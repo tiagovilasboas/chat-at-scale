@@ -3,6 +3,8 @@
 > Sistema de mensagens em tempo real que evolui de um MVP simples para uma plataforma escalável.  
 > **Princípio:** Otimize pela clareza das decisões e do design sistêmico, não por código perfeito.
 
+**Staff/Principal:** Este doc é o gate zero. Se o problema não está claro (o quê, restrições, escala, fora do escopo), pare. Código sem problema bem definido vira débito técnico disfarçado de progresso.
+
 ---
 
 ## O que estamos construindo
@@ -50,6 +52,12 @@ Um **desafio de sistemas distribuídos** : toda decisão envolve trade-offs expl
 | **Presence** (online/offline) | Possível extensão futura |
 | **Read receipts / typing indicators** | Possível extensão futura |
 | **Multi-dispositivo por usuário** | Simplificação inicial : tratar depois |
+
+---
+
+## Validação de escopo (evitar over-engineering)
+
+O design deste repo é completo pra plataforma. Pra MVP, valide o que realmente precisa do dia um. Clean Architecture em chat de 50 usuários pode ser overkill; em chat de 10k, faz sentido. Pergunte: "qual é o menor escopo que valida o problema?" antes de implementar tudo.
 
 ---
 
