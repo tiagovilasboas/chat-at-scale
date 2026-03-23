@@ -2,6 +2,8 @@
 
 > **Invariantes** são propriedades que o sistema **sempre** mantém, independente de carga, falhas ou estado. Violar um invariante indica bug ou design incorreto.
 
+**Staff/Principal:** Invariantes vêm antes da implementação. Se você não sabe o que jamais pode quebrar, não sabe o que está construindo. Defina primeiro, codifique depois.
+
 ---
 
 ## O que jamais pode quebrar

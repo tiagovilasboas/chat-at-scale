@@ -3,6 +3,7 @@
 Tradução para português brasileiro da documentação de design do sistema de mensagens em tempo real.
 
 > **Nota:** Termos técnicos (WebSocket, fan-out, at-least-once, backfill, etc.) permanecem em inglês nas traduções.
+> **Staff/Principal:** Cada doc inclui um callout sobre como atuar nesse nível. Regra de ouro: jamais pule para implementação antes de entender o problema. Problema primeiro, código depois.
 
 ---
 

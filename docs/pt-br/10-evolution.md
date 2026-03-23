@@ -2,6 +2,8 @@
 
 > Como este sistema evoluiria quando implantado em ambiente de produção real: o que muda, o que quebra primeiro e o que exige redesenho.
 
+**Staff/Principal:** Pense no que quebra primeiro antes de acontecer. Evolução não é improviso, é planejar pontos de corte e migração desde o dia um.
+
 ---
 
 ## 1. Fases de evolução

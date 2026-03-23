@@ -30,6 +30,8 @@ O problema? Construir uma plataforma de mensagens que vai de MVP até 10k–50k 
 
 ## A trilha (por onde começar)
 
+**Mindset Staff/Principal:** Nunca pule para implementação antes de entender o problema. Problema primeiro, invariantes, trade-offs, arquitetura, só então código. Essa regra permeia toda a documentação.
+
 Se você quer entender como eng de liderança técnica pensa e age, segue essa ordem:
 
 1. **Começo** (~10 min) - [00 Regras Principais](./docs/pt-br/00-principal-engineering-rules.md) e [01 Definição do Problema](./docs/pt-br/01-problem-definition.md)

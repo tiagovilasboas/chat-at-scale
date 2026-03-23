@@ -2,6 +2,8 @@
 
 > Decisões arquiteturais envolvem **trade-offs explícitos**. Este documento lista escolhas principais, opções e justificativas.
 
+**Staff/Principal:** Pense em trade-offs antes de escrever código. Alternativas, consequências, reversibilidade. Sem decisões silenciosas. Se você não sabe por que escolheu X em vez de Y, pare e documente.
+
 **ADRs formais:** [001 WebSocket](../adr/001-websocket-primario.md) · [002 at-least-once](../adr/002-at-least-once.md) · [003 ordem total](../adr/003-ordem-total-por-conversa.md) · [004 write-through](../adr/004-persistencia-write-through.md)
 
 ---

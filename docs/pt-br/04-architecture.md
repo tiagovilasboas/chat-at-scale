@@ -2,6 +2,8 @@
 
 > Visão geral dos componentes, responsabilidades e fluxo de dados. Clareza sobre complexidade.
 
+**Staff/Principal:** Arquitetura é consequência de problema definido + invariantes + trade-offs. Se você desenha componentes antes de ter isso claro, está construindo em areia. Revise os docs 01–03 antes de desenhar caixas e setas.
+
 ---
 
 ## Diagrama de componentes

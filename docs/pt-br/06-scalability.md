@@ -2,6 +2,8 @@
 
 > Padrões de carga, gargalos e estratégias de escala para a plataforma de mensagens.
 
+**Staff/Principal:** Pergunte "e se 10x?" antes de codificar. Identifique gargalos no papel. Escalar código sem design de escala é reescrever no escuro.
+
 ---
 
 ## 1. Tipos de carga

@@ -2,6 +2,8 @@
 
 > Semântica central de entrega, ordenação, retries e tratamento offline. Este documento define o contrato entre cliente e servidor.
 
+**Staff/Principal:** O contrato de mensagens deve estar definido antes de qualquer implementação. Cliente e servidor precisam concordar em at-least-once, ordenação e backfill. Sem isso, integrações futuras pagam o preço.
+
 ---
 
 ## 1. Garantia de entrega: at-least-once

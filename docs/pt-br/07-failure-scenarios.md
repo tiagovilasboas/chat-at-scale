@@ -2,6 +2,8 @@
 
 > Modos de falha e como o sistema detecta, trata e se recupera deles.
 
+**Staff/Principal:** Assume falhas antes do happy path. Desenhe recuperação para cada modo de falha. Implementar só o sucesso e "ver o que quebra" não é pensamento de Staff.
+
 ---
 
 ## 1. Cliente offline

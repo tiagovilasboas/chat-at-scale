@@ -62,14 +62,31 @@ Principal é tipicamente o **nível seguinte ao Staff** na trilha IC (Individual
 
 ---
 
+## Os trade-offs de ser Staff/Principal (time, código, você)
+
+O papel não é só técnico. Você abre mão de coisas e ganha outras. O mindset Staff/Principal sabe disso e escolhe consciente:
+
+| O que você abre mão | O que ganha |
+|--------------------|-------------|
+| Maioria do tempo em código próprio | Impacto multiplicado: o time inteiro segue o que você define |
+| Ser o expert em tudo no seu sistema | Visão ampla: sabe onde cada peça encaixa e onde quebra |
+| Resolver sozinho e rápido | Ensinar a resolver: capacita o time, não cria dependência |
+| Decisão instantânea | Decisão alinhada: stakeholders no mesmo barco, menos retrabalho |
+| Apagar incêndio o dia inteiro | Definir o que importa: prioriza o que vai evitar incêndio amanhã |
+
+**Em resumo:** Você para de maximizar seu output e passa a maximizar o do time. Menos "eu fiz", mais "nós desenhamos e entregamos juntos". E sim, às vezes dá vontade de sentar e codar o dia todo. O trade-off é consciente.
+
+---
+
 ## O que um Staff/Principal faz no dia a dia (na prática)
 
-- **Pensa em trade-offs antes de código** — alternativas, consequências, reversibilidade
-- **Documenta decisões** — ADRs, design docs; "se não está documentado, não existe"
-- **Assume falhas** — desenha recuperação antes do happy path
-- **Pergunta "e se 10x?"** — escala, gargalos, custo
-- **Leva casos reais pra reunião** — "a Slack fez X; o Discord migrou Y; o eBay provou que 100ms = +0,5% conversão"
-- **Não precisa estar certo** — precisa tornar as opções claras e as consequências explícitas
+- **Jamais pula para implementação antes de entender o problema:** problema primeiro, invariantes, trade-offs, arquitetura, só então código. Em todo projeto.
+- **Pensa em trade-offs antes de código:** alternativas, consequências, reversibilidade
+- **Documenta decisões:** ADRs, design docs; "se não está documentado, não existe"
+- **Assume falhas:** desenha recuperação antes do happy path
+- **Pergunta "e se 10x?":** escala, gargalos, custo
+- **Leva casos reais pra reunião:** "a Slack fez X; o Discord migrou Y; o eBay provou que 100ms = +0,5% conversão"
+- **Não precisa estar certo:** precisa tornar as opções claras e as consequências explícitas
 
 ---
 
@@ -88,6 +105,6 @@ Principal é tipicamente o **nível seguinte ao Staff** na trilha IC (Individual
 
 ## Documentos relacionados
 
-- [00 — Regras Principais](./00-principal-engineering-rules.md) — o que um Staff/Principal considera antes de implementar
-- [03 — Trade-offs](./03-trade-offs.md) — exemplo de decisões com alternativas explícitas
-- [11 — Casos de Mensageria](./11-casos-mensageria.md) — casos reais para citar em discussões
+- [00 — Regras Principais](./00-principal-engineering-rules.md): o que um Staff/Principal considera antes de implementar
+- [03 — Trade-offs](./03-trade-offs.md): exemplo de decisões com alternativas explícitas
+- [11 — Casos de Mensageria](./11-casos-mensageria.md): casos reais para citar em discussões

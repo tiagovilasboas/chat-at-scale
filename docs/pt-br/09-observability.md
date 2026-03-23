@@ -2,6 +2,8 @@
 
 > Logs, métricas e estratégias de debug para operações e resposta a incidentes.
 
+**Staff/Principal:** Observabilidade entra no design, não depois do deploy. Se você não sabe como debugar em produção antes de codificar, está adiando o inevitável.
+
 ---
 
 ## 1. Logs
