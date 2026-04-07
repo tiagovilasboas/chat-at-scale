@@ -110,10 +110,12 @@ Acesse `http://localhost:5173`:
 **Backend**
 - `infrastructure/db/schema.ts` — tabelas `users` (+ `password_hash`) e `sessions`
 - `infrastructure/http/auth.ts` — `POST /api/auth/register`, `POST /api/auth/login`, `setErrorHandler` global
+- `infrastructure/http/auth.spec.ts` — **[NEW]** Testes unitários p/ `hashPassword` e `verifyPassword`
 - `infrastructure/websocket/handler.ts` — validação JWT no gateway
 
 **Frontend**
 - `auth/store/authStore.ts` — Zustand + persist (sessão global, logout limpa chatStore)
+- `auth/store/authStore.spec.ts` — **[NEW]** Testes unitários garantindo persistência e limpeza profunda
 - `auth/services/auth.ts` — HTTP client para register/login
 - `auth/pages/Login/index.tsx` — UI com toggle register/login, loading state, feedback visual
 - `chat/store/chatStore.ts` — mensagens, deduplicação, backfill por sequence cursor
@@ -125,6 +127,7 @@ Acesse `http://localhost:5173`:
 - `apps/backend/.env.example` — template de variáveis de ambiente
 - `apps/web/.env.example` — template de variáveis de ambiente (VITE_ prefix)
 - `src/index.css` — dark mode forçado, paleta indigo-violet
+- `.husky/pre-commit` — **[NOVO GATE]** Execução automática de `npm test` para frontend e backend
 
 ---
 
@@ -138,6 +141,6 @@ Acesse `http://localhost:5173`:
 - [x] Variáveis de ambiente via `.env` (gitignored) + `.env.example`
 - [x] `ErrorBoundary` para erros de render
 - [x] `setErrorHandler` global no Fastify (sem stack traces em produção)
-- [x] TypeScript + ESLint passando no pre-commit gate
+- [x] **[TESTS]** TypeScript + ESLint + Vitest Unit Tests 100% passando no pre-commit gate
 - [ ] DB session check no WS (JWT stateless funcionando; DB check → Fase 5 com Redis)
 - [ ] Endpoint `DELETE /api/auth/session` para revogação via API (Fase 5)
