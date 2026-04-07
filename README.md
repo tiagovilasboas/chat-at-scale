@@ -98,11 +98,42 @@ Contribuindo: [CONTRIBUTING.md](CONTRIBUTING.md) (gate, checklist de feature pro
 
 ---
 
-## Executando
+## Executando (MVP Fase 1)
 
-*Ainda não tem código. O repo tá em fase de design.*
+O código base inicial (Clean Architecture) já está implementado contendo: **PostgreSQL**, **API Gateway (Fastify WS)** e **Cliente Web (React Vite / Shadcn UI)**.
 
-Quando tiver: `docker compose up` ou `npm run dev` / `cargo run`. Topologia e fluxo em [04 Arquitetura](./docs/pt-br/04-architecture.md).
+Para rodar localmente no ambiente de desenvolvimento:
+
+1. **Suba a infraestrutura do banco de dados:**
+   ```bash
+   docker compose up -d
+   ```
+2. **Instale as dependências (NPM Workspaces):**
+   ```bash
+   # Na pasta raiz
+   npm install
+   ```
+3. **Execute as Migrations (Drizzle) e inicie os servidores:**
+   ```bash
+   cd apps/backend && npx drizzle-kit push && cd ../.. 
+   ```
+4. **Suba o Frontend e o Backend em paralelo:**
+   Abra dois terminais na raiz:
+   ```bash
+   npm run dev --workspace=apps/backend
+   npm run dev --workspace=apps/web
+   ```
+
+O cliente React estará disponível em `http://localhost:5173`.
+A Topologia e fluxo lógico estão detalhados em [04 Arquitetura](./docs/pt-br/04-architecture.md) e o racional das escolhas no [ADR 005](./docs/adr/005-initial-tech-stack-and-persistence.md).
+
+---
+
+## Estrutura Multi-Agents (AI Driven)
+
+Este repositório adota configurações de engajamento assíncrono para LLMs de última geração (Claude Code, Cursor, Windsurf).
+- As diretrizes globais da arquitetura Staff/Principal residem no `CLAUDE.md`.
+- As matrizes segmentadas especializadas (Frontend, Backend, QA) residem na pasta estrita `.agents/personas/`. Quando utilizar IAs para refatorações setoriais, recomende-as importar diretamente seus manuais isolados limitando o blast radius arquitetural.
 
 ---
 
