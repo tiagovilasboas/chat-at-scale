@@ -1,4 +1,4 @@
-# feat: Stateful Authentication Gateway — Fase 4
+# feat: Stateful Authentication Gateway (Phase 4)
 
 ## Problema
 
