@@ -3,11 +3,11 @@
 
 import { useEffect, useRef } from 'react'
 import { useChatStore } from '@/chat/store/chatStore'
-import type { Session, ServerPayload } from '@/shared/types'
+import type { ServerPayload } from '@/shared/types'
 
-const WS_URL = import.meta.env.VITE_WS_URL ?? 'ws://localhost:8080'
-
-export function useWebSocket(session: Session) {
+// Rely on window.location to strictly use the Vite Dev Server Proxy (or production ingress)
+// This guarantees that HttpOnly cookies are attached seamlessly by the browser.
+export function useWebSocket() {
   const { messages, addMessage, mergeBackfill, setConnected } = useChatStore()
   const wsRef = useRef<WebSocket | null>(null)
   // Stable ref so the onopen closure always reads the latest cursor without re-creating the socket
@@ -20,7 +20,8 @@ export function useWebSocket(session: Session) {
     // CONNECTING (readyState=0). Without this flag the WS is closed before it ever opens.
     let shouldConnect = true
 
-    const socket = new WebSocket(`${WS_URL}/ws?token=${session.token}`)
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const socket = new WebSocket(`${wsProtocol}//${window.location.host}/ws`)
     wsRef.current = socket
 
     socket.onopen = () => {
@@ -49,7 +50,7 @@ export function useWebSocket(session: Session) {
         socket.close()
       }
     }
-  }, [session.token, addMessage, mergeBackfill, setConnected])
+  }, [addMessage, mergeBackfill, setConnected])
 
   const send = (content: string) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {

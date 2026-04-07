@@ -175,5 +175,6 @@ Acesse `http://localhost:5173`:
 - [x] `ErrorBoundary` para erros de render
 - [x] `setErrorHandler` global no Fastify (sem stack traces em produção)
 - [x] **[TESTS]** TypeScript + ESLint + Vitest Unit Tests 100% passando no pre-commit gate
+- [x] **[PHASE 4.1]** Migração para `HttpOnly` Cookies resolvendo risco de XSS, eliminando `?token=` da query do WebSocket e proxy nativo no Vite.
 - [ ] DB session check no WS (JWT stateless funcionando; DB check → Fase 5 com Redis)
 - [ ] Endpoint `DELETE /api/auth/session` para revogação via API (Fase 5)

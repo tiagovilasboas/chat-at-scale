@@ -25,7 +25,7 @@ export function Login({ onLogin }: { onLogin: (session: Session) => void }) {
         setPassword('')
       } else {
         const data = await authService.login(username, password)
-        onLogin({ token: data.token, userId: data.userId, username: data.username })
+        onLogin({ userId: data.userId, username: data.username })
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err))

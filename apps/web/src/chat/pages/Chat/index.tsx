@@ -38,7 +38,7 @@ export function Chat({ session, onLogout }: { session: Session; onLogout: () => 
   const bottomRef = useRef<HTMLDivElement>(null)
   const messages = useChatStore(s => s.messages)
   const connected = useChatStore(s => s.connected)
-  const { send } = useWebSocket(session)
+  const { send } = useWebSocket()
 
   // Auto-scroll to bottom on new messages
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])

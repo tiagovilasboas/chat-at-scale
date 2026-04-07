@@ -10,7 +10,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'staff_principal_secret';
 
 export function setupWebSocketRoutes(fastify: FastifyInstance) {
   fastify.get('/ws', { websocket: true }, async (connection: any, req: any) => {
-    const token = req.query.token;
+    // Read JWT directly from HttpOnly Cookie provided by browser
+    const token = req.cookies?.token;
 
     if (!token) {
       fastify.log.warn('Unauthorized WSS attempt: Missing token parameter');

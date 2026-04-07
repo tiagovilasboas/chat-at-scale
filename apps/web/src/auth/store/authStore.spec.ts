@@ -27,7 +27,7 @@ describe('Auth Store (Zustand)', () => {
   it('should set session on login', () => {
     const { result } = renderHook(() => useAuthStore());
     
-    const mockSession = { token: 'jwt123', userId: 'user-1', username: 'testuser' };
+    const mockSession = { userId: 'user-1', username: 'testuser' };
     
     act(() => {
       result.current.login(mockSession);
@@ -43,7 +43,7 @@ describe('Auth Store (Zustand)', () => {
   it('should clear session on logout', async () => {
     const { result } = renderHook(() => useAuthStore());
     
-    const mockSession = { token: 'jwt123', userId: 'user-1', username: 'testuser' };
+    const mockSession = { userId: 'user-1', username: 'testuser' };
     
     act(() => {
       result.current.login(mockSession);
