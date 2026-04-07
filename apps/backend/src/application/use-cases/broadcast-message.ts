@@ -4,12 +4,8 @@ import { sql } from 'drizzle-orm';
 
 export class BroadcastMessageUseCase {
   async execute(dto: { conversationId: string, senderId: string, content: string }) {
-    // 1. Ensure User exist (MVP stubbing Auth flow)
-    await db.insert(users)
-      .values({ id: dto.senderId, username: dto.senderId })
-      .onConflictDoNothing();
-
-    // 2. Ensure Conversation exist (MVP defaults)
+    // 1. Ensure Conversation exist (MVP defaults)
+    // We do NOT blindly insert Users anymore. Authenticated users MUST exist natively.
     await db.insert(conversations)
       .values({ id: dto.conversationId })
       .onConflictDoNothing();
