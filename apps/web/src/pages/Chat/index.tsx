@@ -11,11 +11,11 @@ type Message = {
   content: string
 }
 
-export function Chat() {
+export function Chat({ session, onLogout }: { session: { token: string, userId: string, username: string }, onLogout: () => void }) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [connected, setConnected] = useState(false)
-  const [userId, setUserId] = useState<string>('')
+  const [userId, setUserId] = useState<string>(session.userId)
   
   const ws = useRef<WebSocket | null>(null)
   const messagesRef = useRef(messages)
@@ -26,7 +26,8 @@ export function Chat() {
   }, [messages])
   
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:8080/ws')
+    // Explicit JWT query enforcement
+    const socket = new WebSocket(`ws://localhost:8080/ws?token=${session.token}`)
     ws.current = socket
 
     socket.onopen = () => {
@@ -68,7 +69,7 @@ export function Chat() {
     socket.onclose = () => setConnected(false)
 
     return () => socket.close()
-  }, [])
+  }, [session.token])
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault()
@@ -81,9 +82,12 @@ export function Chat() {
     <div className="flex flex-col h-screen max-w-2xl mx-auto border-x bg-background">
       <header className="p-4 border-b flex justify-between items-center">
         <h1 className="text-xl font-bold tracking-tight">Chat at Scale</h1>
-        <div className="flex items-center gap-2">
-          <div className={`w-3 h-3 rounded-full ${connected ? 'bg-green-500' : 'bg-red-500'}`} />
-          <span className="text-sm font-medium">{connected ? userId : 'Conectando/Sincronizando...'}</span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${connected ? 'bg-green-500' : 'bg-red-500'}`} />
+            <span className="text-sm font-medium">{connected ? session.username : 'Conectando (Aguardando WSS)...'}</span>
+          </div>
+          <Button variant="ghost" size="sm" onClick={onLogout}>Desconectar</Button>
         </div>
       </header>
       
