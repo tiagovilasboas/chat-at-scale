@@ -1,64 +1,29 @@
 # feat: Stateful Authentication Gateway (Phase 4)
 
-## Problema
+## A Jornada do Usuário (Regras de Negócio)
 
-O sistema não tinha autenticação. Qualquer conexão WebSocket era aceita sem validação de identidade. Isso expunha o servidor a:
-- Slowloris attacks (conexões maliciosas consumindo memória indefinidamente)
-- Spoofing (mensagens sendo enviadas em nome de qualquer usuário)
+A autenticação foi desenhada para garantir uma experiência fluída, segura e atômica. Abaixo estão as regras de negócio mapeadas na jornada do usuário:
 
----
+### 1. Criando uma conta (Registro)
+- **Regra**: O sistema exige um `username` absoluto e único. Tentar registrar um nome já existente barra a requisição de imediato.
+- **Segurança**: Em vez de guardar as senhas no banco, o sistema aplica um processamento criptográfico (`scrypt`) criando uma digital irreversível e atrelada a uma "chave de sal" aleatória.
 
-## Regras de Negócio Implementadas
+### 2. Entrando no sistema (Login)
+- **Regra**: O usuário provê credenciais corretas e recebe uma **Autorização de 7 dias** (representada pelo token JWT).
+- **Rastreabilidade**: Ao longo desses 7 dias, a sessão do usuário fica rastreada no banco de dados. Isso permite saber exatamente quantos dispositivos o usuário conectou.
+- **Experiência (Frontend)**: Uma vez logado, o "Crachá" (Token) fica gravado no navegador. Se o usuário fechar a aba e voltar amanhã, ele será **direcionado imediatamente para o Chat**, sem passar pela tela de login de novo.
 
-| Regra | Onde é aplicada |
-|---|---|
-| Um usuário precisa de username único para se registrar | `POST /api/auth/register` → Postgres UNIQUE constraint |
-| A senha nunca é armazenada em texto plano | `scrypt` com salt aleatório — salvo como `"hash.salt"` |
-| O login retorna um token com validade de 7 dias | JWT HS256 com claim `expiresIn: '7d'` |
-| Cada sessão é rastreada individualmente no banco | Tabela `sessions` com `user_id`, `token`, `expires_at`, `revoked_at` |
-| Uma sessão pode ser revogada antes de expirar | `revoked_at` nullable — NULL = ativa, NOT NULL = inválida |
-| Nenhuma conexão WebSocket é aceita sem uma sessão válida | Gateway valida assinatura JWT antes de alocar memória |
-| O servidor nunca confia no que o cliente diz sobre quem é | A identidade vem sempre do JWT decodificado, nunca de parâmetros enviados pelo cliente |
-| Tokens com assinatura inválida ou expirados são rejeitados com `1008 Policy Violation` | `jwt.verify()` no handshake WS |
+### 3. Conectando ao Chat (A Porta do WebSocket)
+- **Regra de Acesso**: O Chat não confia em ninguém. Ao tentar abrir a conexão via WebSocket, o usuário deve apresentar o seu Crachá (Token) na "porta".
+- **Rejeição sumária**: Se o crachá estiver expirado, for falso ou não existir, a porta não abre. A conexão é recusada com `1008 Policy Violation`, protegendo o servidor de abusos.
+
+### 4. Saindo do sistema (Logout / Revogação)
+- **Regra**: Quando o usuário clica em "Sign out", o sistema destrói as mensagens sensíveis da tela do chat e joga o crachá do navegador fora.
+- **Revogação (Poder Administrativo)**: Graças ao mecanismo de tracking no banco, a administração do sistema possui o poder de "**Revogar**" a sessão de um usuário a qualquer instante antes dos 7 dias, derrubando a conexão dele em tempo-real.
 
 ---
 
 ## Como Funciona
-
-### Registro e Login
-
-```
-POST /api/auth/register  →  cria users row (password_hash via scrypt)
-POST /api/auth/login     →  verifica hash → gera JWT → salva em sessions
-                            retorna: { token, userId, username }
-```
-
-### Sessão no Banco de Dados
-
-```sql
-sessions (
-  id         UUID PRIMARY KEY,
-  user_id    → FK users.id,
-  token      VARCHAR(1024) UNIQUE,  -- JWT completo indexado
-  expires_at TIMESTAMP,             -- login + 7 dias
-  revoked_at TIMESTAMP NULL         -- NULL = ativa
-)
-```
-
-**Expiração dupla**: o JWT carrega `exp` embutido (validado pelo `jsonwebtoken.verify()` automaticamente) e o banco tem `expires_at` que permite expiração antecipada por revogação de conta.
-
-### Gateway WebSocket
-
-```
-ws://host:8080/ws?token=<JWT>
-  ↓
-1. Token presente? → não: close(1008)
-2. Assinatura JWT válida? → não: close(1008)
-3. Conecta, envia mensagem `{ type: 'connected' }`
-4. Aguarda mensagem `{ type: 'sync', cursor: N }` → responde com mensagens perdidas
-```
-
-O token vai no query param porque browsers não permitem headers customizados em WebSocket upgrades.
 
 ### Arquitetura do Frontend (Screaming Arch & Zustand)
 
@@ -96,6 +61,41 @@ useEffect(() => {
 }, [])
 ```
 Em dev, o React StrictMode monta e desmonta o `useEffect` duas vezes instantaneamente. Se a conexāo tentar abrir mas o componente "morrer" antes do `onopen`, o browser deixará um socket fantasma em estado de `CONNECTING` (readyState 0). A flag `shouldConnect` anula callbacks atrasados e garante o fechamento fluído no unmount.
+
+### Registro e Login (Backend)
+
+```
+POST /api/auth/register  →  cria users row (password_hash via scrypt)
+POST /api/auth/login     →  verifica hash → gera JWT → salva em sessions
+                            retorna: { token, userId, username }
+```
+
+### Sessão no Banco de Dados (Backend)
+
+```sql
+sessions (
+  id         UUID PRIMARY KEY,
+  user_id    → FK users.id,
+  token      VARCHAR(1024) UNIQUE,  -- JWT completo indexado
+  expires_at TIMESTAMP,             -- login + 7 dias
+  revoked_at TIMESTAMP NULL         -- NULL = ativa
+)
+```
+
+**Expiração dupla**: o JWT carrega `exp` embutido (validado pelo `jsonwebtoken.verify()` automaticamente) e o banco tem `expires_at` que permite expiração antecipada por revogação de conta.
+
+### Gateway WebSocket (Backend)
+
+```
+ws://host:8080/ws?token=<JWT>
+  ↓
+1. Token presente? → não: close(1008)
+2. Assinatura JWT válida? → não: close(1008)
+3. Conecta, envia mensagem `{ type: 'connected' }`
+4. Aguarda mensagem `{ type: 'sync', cursor: N }` → responde com mensagens perdidas
+```
+
+O token vai no query param porque browsers não permitem headers customizados em WebSocket upgrades.
 
 ### Variáveis de Ambiente
 
