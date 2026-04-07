@@ -61,4 +61,65 @@ Este repositório foi construído e configurado estruturalmente para Agentes de 
 
 O cliente do App Web estará responsivo aguardando interação em **[http://localhost:5173](http://localhost:5173)**, servindo à retaguarda blindada do interceptor WSS no Node `ws://localhost:8080/ws`.
 
-> *Consulte as Atas Arquiteturais Oficiais (ADRs) documentando profundamente como preterimos bibliotecas mágicas em prol da Engenharia de Raiz visitando os sub-diretórios presentes em **`docs/adr/`**.*
+---
+
+## 🔐 Session Persistence & Expiration
+
+A autenticação opera em **duas camadas complementares de persistência**:
+
+### Camada 1 — Backend (PostgreSQL)
+
+Ao fazer login, o servidor cria um registro na tabela `sessions`:
+
+```sql
+-- Schema Drizzle ORM
+sessions (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     VARCHAR → FK users.id,
+  token       VARCHAR(1024) UNIQUE,   -- o JWT completo
+  expires_at  TIMESTAMP NOT NULL,     -- agora + 7 dias
+  created_at  TIMESTAMP DEFAULT NOW(),
+  revoked_at  TIMESTAMP NULL          -- NULL = sessão ativa
+)
+```
+
+**Expiração**: o campo `expires_at` é calculado em `Date.now() + 7 * 24h` no momento do login. Além disso, o próprio JWT carrega a claim `expiresIn: '7d'` — logo a validação dupla acontece:
+1. `jsonwebtoken.verify()` rejeita automaticamente tokens cujo `exp` já passou (stateless)
+2. A query no banco verifica `expires_at < NOW()` (stateful — permite expiração antecipada por revogação)
+
+**Revogação**: para invalidar uma sessão antes do prazo (ex: logout forçado por segurança), basta setar `revoked_at = NOW()` na linha. O gateway WS checa `revokedAt IS NULL` em cada reconexão.
+
+### Camada 2 — Frontend (Zustand Persist → localStorage)
+
+O `useAuthStore` usa o middleware `persist` do Zustand:
+
+```ts
+persist(
+  (set) => ({ session: null, login, logout }),
+  { name: 'chat-auth' }  // ← chave no localStorage
+)
+```
+
+O `localStorage['chat-auth']` armazena:
+```json
+{ "state": { "session": { "token": "eyJ...", "userId": "usr_...", "username": "..." } }, "version": 0 }
+```
+
+No boot da aplicação, o Zustand reidrata o estado antes da primeira renderização (zero `useEffect`, zero flash de UI). No logout, `set({ session: null })` limpa o store e o Zustand persist apaga o `localStorage` automaticamente.
+
+### Fluxo completo de uma sessão
+
+```
+Register → users + sessions criados (expires_at = +7d)
+Login    → nova sessions row + JWT emitido → localStorage via Zustand persist
+Boot     → Zustand lê localStorage → token presente → Chat direto (sem round-trip)
+WS       → ?token=JWT → servidor verifica assinatura JWT → conexão aceita
+Logout   → Zustand limpa localStorage → App redireciona para Login
+Expirou  → jwt.verify() rejeita → WS fecha 1008 → App redireciona para Login
+```
+
+> *Consulte **`docs/adr/007-persisted-gateway-authentication.md`** para o racional completo da decisão de autenticação stateful vs. stateless.*
+
+---
+
+> *Consulte as Atas Arquiteturais Oficiais (ADRs) em **`docs/adr/`** para as decisões de design que fundamentam essa arquitetura.*
