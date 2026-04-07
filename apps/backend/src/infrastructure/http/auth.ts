@@ -10,13 +10,13 @@ const scryptAsync = promisify(scrypt);
 const JWT_SECRET = process.env.JWT_SECRET || 'staff_principal_secret';
 
 // Using native NodeJS crypto prevents brittle C++ bindings missing from bcrypt
-async function hashPassword(password: string) {
+export async function hashPassword(password: string) {
   const salt = randomBytes(16).toString('hex');
   const buf = (await scryptAsync(password, salt, 64)) as Buffer;
   return `${buf.toString('hex')}.${salt}`;
 }
 
-async function verifyPassword(password: string, storedHash: string) {
+export async function verifyPassword(password: string, storedHash: string) {
   const [hash, salt] = storedHash.split('.');
   const buf = (await scryptAsync(password, salt, 64)) as Buffer;
   return buf.toString('hex') === hash;
