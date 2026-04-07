@@ -98,42 +98,56 @@ Contribuindo: [CONTRIBUTING.md](CONTRIBUTING.md) (gate, checklist de feature pro
 
 ---
 
-## Executando (MVP Fase 1)
+## 🚦 Executando Localmente (MVP & Autenticação)
 
-O código base inicial (Clean Architecture) já está implementado contendo: **PostgreSQL**, **API Gateway (Fastify WS)** e **Cliente Web (React Vite / Shadcn UI)**.
+O código base inicial (Clean Architecture) já está implementado contendo: **PostgreSQL**, **API Gateway (Fastify API & WS)** com proteção de sessão e **Cliente Web (React Vite / Shadcn UI)** estruturado em domínios isolados.
 
-Para rodar localmente no ambiente de desenvolvimento:
-
-1. **Suba a infraestrutura do banco de dados:**
+1. **Iniciando a Infraestrutura e Banco**:
    ```bash
+   npm i
    docker compose up -d
-   ```
-2. **Instale as dependências (NPM Workspaces):**
-   ```bash
-   # Na pasta raiz
-   npm install
-   ```
-3. **Execute as Migrations (Drizzle) e inicie os servidores:**
-   ```bash
    cd apps/backend && npx drizzle-kit push && cd ../.. 
    ```
-4. **Suba o Frontend e o Backend em paralelo:**
-   Abra dois terminais na raiz:
+
+2. **Iniciando os Servidores (Monorepo)**:
    ```bash
    npm run dev --workspace=apps/backend
    npm run dev --workspace=apps/web
    ```
 
-O cliente React estará disponível em `http://localhost:5173`.
-A Topologia e fluxo lógico estão detalhados em [04 Arquitetura](./docs/pt-br/04-architecture.md) e o racional das escolhas no [ADR 005](./docs/adr/005-initial-tech-stack-and-persistence.md).
+O cliente do App Web estará responsivo aguardando interação em **[http://localhost:5173](http://localhost:5173)**, fazendo proxy localmente e nativamente para a retaguarda blindada no Node `http://localhost:8080`. Toda a arquitetura foi desenhada priorizando D.X (Developer Experience).
 
 ---
 
-## Estrutura Multi-Agents (AI Driven)
+## 🔐 Session Persistence & Arquitetura (Dual-Token Pattern)
+
+A autenticação opera em **duas camadas complementares de persistência**, focadas em mitigar riscos graves de invasão (XSS) e paralelamente manter a fluidez instantânea de navegação que o Usuário de UI moderna necessita (O Zero-Loading):
+
+### Camada 1 — Backend (PostgreSQL & Fastify HttpOnly)
+
+Ao fazer login (usando Node Native `scrypt` hash system), o servidor cria um registro na tabela `sessions` (`token`, `expires_at`, `revoked_at`). O JWT master gerado é então empacotado e enviado de volta ao Chrome por um **Cookie `HttpOnly`**: blindado, imutável e 100% invisível ao Javascript frontend. Se por ventura um hacker injetar pacotes NPM maliciosos (XSS), seu Token não poderá ser clonado da memória local.
+
+**Expiração Dupla**: O JWT nativamente carrega a diretiva `expiresIn: 7d` (Validado Sem I/O de Banco, escalável e Rápido no WS Gateway). O banco adicionalmente checa o `revoked_at`, propiciando revogabilidade forçada em nível administrativo.
+
+### Camada 2 — Frontend (Zustand Persist → Local Metadata)
+
+Se não possuímos o Token no Frontend, como o site sabe que você logou ontem ao invés de piscar na clássica e inconveniente Tela de Login ("Flash of unauthenticated content") gerando re-renders visuais lentos?
+
+Utilizamos o **Zustand Persist** que injeta no `localStorage['chat-auth']` inteiramente os **Metadados em Cache** locais:
+```json
+{ "state": { "session": { "userId": "usr_...", "username": "John Doe" } }, "version": 0 }
+```
+Assim que você entra no site, o Motor de Renderização já injeta seu Nome e Avatar sincronamente (`0.02ms`), mas ao se conectar com o WebSocket, o Navegador insere o seu `HttpOnly Cookie` original e envia sem você tocar. O melhor dos 2 mundos.
+
+> *Consulte **`docs/adr/007-persisted-gateway-authentication.md`** para detalhes técnicos e diagramas.*
+
+---
+
+## 🤖 Estrutura Multi-Agents (AI Driven)
 
 Este repositório adota configurações de engajamento assíncrono para LLMs de última geração (Claude Code, Cursor, Windsurf).
 - As diretrizes globais da arquitetura Staff/Principal residem no `CLAUDE.md`.
-- As matrizes segmentadas especializadas (Frontend, Backend, QA) residem na pasta estrita `.agents/personas/`. Quando utilizar IAs para refatorações setoriais, recomende-as importar diretamente seus manuais isolados limitando o blast radius arquitetural.
+- As matrizes segmentadas especializadas (Frontend, Backend, DBA e QA) residem na pasta estrita `.agents/personas/`. Quando utilizar IAs para refatorações setoriais, recomende-as importar diretamente seus manuais isolados limitando o blast radius arquitetural de falucinação do modelo.
 
 ---
 

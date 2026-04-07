@@ -1,15 +1,35 @@
 import { FastifyInstance } from 'fastify';
 import { BroadcastMessageUseCase } from '../../application/use-cases/broadcast-message';
 import { BackfillMessagesUseCase } from '../../application/use-cases/backfill-messages';
+import jwt from 'jsonwebtoken';
 
 const broadcastUseCase = new BroadcastMessageUseCase();
 const backfillUseCase = new BackfillMessagesUseCase();
 const DEFAULT_CONVERSATION = '11111111-1111-1111-1111-111111111111';
+const JWT_SECRET = process.env.JWT_SECRET || 'staff_principal_secret';
 
 export function setupWebSocketRoutes(fastify: FastifyInstance) {
-  fastify.get('/ws', { websocket: true }, (connection: any, req: any) => {
-    const userId = req.query.userId || `Guest_${Math.floor(Math.random() * 1000)}`;
-    
+  fastify.get('/ws', { websocket: true }, async (connection: any, req: any) => {
+    // Read JWT directly from HttpOnly Cookie provided by browser
+    const token = req.cookies?.token;
+
+    if (!token) {
+      fastify.log.warn('Unauthorized WSS attempt: Missing token parameter');
+      return connection.socket.close(1008, 'Policy Violation');
+    }
+
+    // Stateless JWT verification: validate signature and expiry.
+    // TODO(Phase 5): Add Redis session cache check here to support instant revocation at scale.
+    // Tracking: https://github.com/tiagovilasboas/chat-at-scale/issues (create issue when Redis is added)
+    let decoded: any;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch {
+      fastify.log.warn('Unauthorized WSS attempt: Invalid or expired JWT');
+      return connection.socket.close(1008, 'Policy Violation');
+    }
+
+    const userId = decoded.userId;
     fastify.log.info(`User connected: ${userId} to Room: Global`);
     connection.socket.send(JSON.stringify({ type: 'connected', user: userId }));
 

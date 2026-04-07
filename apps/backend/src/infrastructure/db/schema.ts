@@ -2,9 +2,21 @@ import { pgTable, varchar, timestamp, uuid, integer, primaryKey, uniqueIndex } f
 
 export const users = pgTable('users', {
   id: varchar('id', { length: 255 }).primaryKey(),
-  username: varchar('username', { length: 255 }).notNull(),
+  username: varchar('username', { length: 255 }).notNull().unique(),
+  passwordHash: varchar('password_hash', { length: 512 }).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export const sessions = pgTable('sessions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: varchar('user_id').references(() => users.id).notNull(),
+  token: varchar('token', { length: 1024 }).notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  revokedAt: timestamp('revoked_at'),
+}, (table) => [
+  uniqueIndex('idx_session_token').on(table.token)
+]);
 
 export const conversations = pgTable('conversations', {
   id: uuid('id').defaultRandom().primaryKey(),
