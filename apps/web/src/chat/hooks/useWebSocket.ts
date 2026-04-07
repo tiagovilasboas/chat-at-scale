@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import { useChatStore } from '@/chat/store/chatStore'
 import type { Session, ServerPayload } from '@/shared/types'
 
-const WS_URL = 'ws://localhost:8080'
+const WS_URL = import.meta.env.VITE_WS_URL ?? 'ws://localhost:8080'
 
 export function useWebSocket(session: Session) {
   const { messages, addMessage, mergeBackfill, setConnected } = useChatStore()
