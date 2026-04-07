@@ -17,7 +17,13 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       session: null,
       login: (session) => set({ session }),
-      logout: () => set({ session: null }),
+      logout: () => {
+        // Dynamically import to avoid circular dependency
+        import('@/chat/store/chatStore').then(({ useChatStore }) => {
+          useChatStore.getState().reset()
+        })
+        set({ session: null })
+      },
     }),
     {
       name: 'chat-auth', // localStorage key

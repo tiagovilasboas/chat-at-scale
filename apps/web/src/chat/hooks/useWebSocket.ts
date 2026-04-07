@@ -16,23 +16,39 @@ export function useWebSocket(session: Session) {
   useEffect(() => { messagesRef.current = messages }, [messages])
 
   useEffect(() => {
+    // Guard against React StrictMode double-mount: cleanup may fire while socket is still
+    // CONNECTING (readyState=0). Without this flag the WS is closed before it ever opens.
+    let shouldConnect = true
+
     const socket = new WebSocket(`${WS_URL}/ws?token=${session.token}`)
     wsRef.current = socket
 
     socket.onopen = () => {
+      if (!shouldConnect) return
       setConnected(true)
       const cursor = messagesRef.current.reduce((max, m) => Math.max(max, m.sequence ?? 0), 0)
       socket.send(JSON.stringify({ type: 'sync', cursor }))
     }
 
     socket.onmessage = (event: MessageEvent) => {
+      if (!shouldConnect) return
       const data = JSON.parse(event.data as string) as ServerPayload
       if (data.type === 'message') addMessage(data)
       else if (data.type === 'sync_result') mergeBackfill(data.messages)
     }
 
-    socket.onclose = () => setConnected(false)
-    return () => socket.close()
+    socket.onclose = () => { if (shouldConnect) setConnected(false) }
+
+    return () => {
+      shouldConnect = false
+      // Null out handlers to prevent stale callbacks from the first mount firing
+      socket.onopen = null
+      socket.onmessage = null
+      socket.onclose = null
+      if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+        socket.close()
+      }
+    }
   }, [session.token, addMessage, mergeBackfill, setConnected])
 
   const send = (content: string) => {

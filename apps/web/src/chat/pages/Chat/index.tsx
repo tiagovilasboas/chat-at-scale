@@ -28,7 +28,8 @@ export function Chat({ session, onLogout }: { session: Session; onLogout: () => 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className={`w-3 h-3 rounded-full ${connected ? 'bg-green-500' : 'bg-red-500'}`} />
-            <span className="text-sm font-medium">{connected ? session.username : 'Conectando...'}</span>
+            <span className="text-sm font-medium">{session.username}</span>
+            {!connected && <span className="text-xs text-muted-foreground">(offline)</span>}
           </div>
           <Button variant="ghost" size="sm" onClick={onLogout}>Sair</Button>
         </div>
