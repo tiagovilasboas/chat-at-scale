@@ -1,14 +1,12 @@
 import type { Session } from '@/shared/types'
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
-
 type AuthResult = Session & { message?: string }
 
-async function request<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
+async function request<T>(path: string, body?: unknown): Promise<T> {
+  const res = await fetch(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: body ? JSON.stringify(body) : undefined,
   })
 
   const data = await res.json()
@@ -22,4 +20,6 @@ export const authService = {
 
   login: (username: string, password: string) =>
     request<AuthResult>('/api/auth/login', { username, password }),
+
+  logout: () => request<{ message: string }>('/api/auth/logout'),
 }

@@ -1,7 +1,6 @@
 // Shared domain types — single source of truth for the entire frontend
 
 export type Session = {
-  token: string
   userId: string
   username: string
 }

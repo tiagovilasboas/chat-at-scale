@@ -66,11 +66,26 @@ export function setupAuthRoutes(fastify: FastifyInstance) {
 
       await db.insert(sessions).values({ userId: user.id, token, expiresAt });
 
-      return reply.send({ token, userId: user.id, username: user.username });
+      await db.insert(sessions).values({ userId: user.id, token, expiresAt });
+
+      reply.setCookie('token', token, {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      });
+
+      return reply.send({ userId: user.id, username: user.username });
     } catch (err: unknown) {
       fastify.log.error(err, 'Login route error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
+  });
+
+  fastify.post('/api/auth/logout', async (req: any, reply) => {
+    reply.clearCookie('token', { path: '/' });
+    return reply.send({ message: 'Logged out' });
   });
 
   // Global error handler — prevents raw unhandled rejections from leaking stack traces
