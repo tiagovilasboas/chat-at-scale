@@ -7,4 +7,10 @@ npm run lint --workspace=apps/web || { echo "❌ Frontend falhou no Lint!"; exit
 echo "🛡️  [FRONTEND] Validando Tipagens (React TS)..."
 npm run build --workspace=apps/web || { echo "❌ Frontend falhou no TypeCheck/Build!"; exit 1; }
 
+echo "🛡️  [BACKEND] Rodando Testes Unitários (Vitest)..."
+npm run test --workspace=apps/backend || { echo "❌ Testes do Backend falharam!"; exit 1; }
+
+echo "🛡️  [FRONTEND] Rodando Testes Unitários (Vitest)..."
+npm run test --workspace=apps/web || { echo "❌ Testes do Frontend falharam!"; exit 1; }
+
 echo "✅ Todos os GATES passaram! Commit autorizado."
