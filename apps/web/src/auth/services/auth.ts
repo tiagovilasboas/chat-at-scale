@@ -1,6 +1,6 @@
 import type { Session } from '@/shared/types'
 
-const BASE_URL = 'http://localhost:8080'
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
 
 type AuthResult = Session & { message?: string }
 
