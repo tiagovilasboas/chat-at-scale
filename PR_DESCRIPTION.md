@@ -60,14 +60,42 @@ ws://host:8080/ws?token=<JWT>
 
 O token vai no query param porque browsers não permitem headers customizados em WebSocket upgrades.
 
-### Persistência no Frontend
+### Arquitetura do Frontend (Screaming Arch & Zustand)
 
-O token retornado pelo login é salvo automaticamente via Zustand `persist` middleware:
+O frontend foi re-estruturado para focar em **domínios de negócio**, abandonando a estrutura técnica clássica (pastas de `components/`, `hooks/`, `services/`).
+
 ```
+src/
+├── auth/              # Domínio de autenticação
+│   ├── services/      # authService — único HTTP client de login
+│   ├── store/         # useAuthStore — estado global da sessão
+│   └── pages/Login/   # UI pura, não sabe como funciona o HTTP
+├── chat/              # Domínio do chat
+│   ├── hooks/         # useWebSocket — zero useState, puro side-effect
+│   └── store/         # useChatStore — banco local de mensagens
+```
+
+#### Por que Zustand e não Context API?
+Usávamos `useState` cascateado que forçava prop-drilling pelo `App.tsx`. Usar Context API resolveria o prop-drilling, mas causaria re-renders em toda a árvore. O **Zustand** cria um store fora da árvore do React.
+
+Além disso, usamos o middleware `persist` do Zustand:
+```ts
 localStorage["chat-auth"] = { state: { session: { token, userId, username } } }
 ```
+Com isso, no próximo boot a sessão é reidratada **antes do primeiro render**, eliminando o flash de "tela de login" para quem já estava logado. Zero requisições de rede no boot, zero `useEffect` de reidratação.
 
-No próximo boot do app, o estado é reidratado antes da primeira renderização — sem flash de UI, sem round-trip de rede.
+#### Resiliência do WebSocket (O caso do React StrictMode)
+```ts
+useEffect(() => {
+  let shouldConnect = true  // ← guard contra double-mount
+  
+  const socket = new WebSocket(...)
+  socket.onopen = () => { if (!shouldConnect) return; ... }
+  
+  return () => { shouldConnect = false; socket.close(); }
+}, [])
+```
+Em dev, o React StrictMode monta e desmonta o `useEffect` duas vezes instantaneamente. Se a conexāo tentar abrir mas o componente "morrer" antes do `onopen`, o browser deixará um socket fantasma em estado de `CONNECTING` (readyState 0). A flag `shouldConnect` anula callbacks atrasados e garante o fechamento fluído no unmount.
 
 ### Variáveis de Ambiente
 
