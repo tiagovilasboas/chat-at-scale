@@ -17,9 +17,10 @@ A autenticação foi desenhada para garantir uma experiência fluída, segura e 
 - **Regra de Acesso**: O Chat não confia em ninguém. Ao tentar abrir a conexão via WebSocket, o usuário deve apresentar o seu Crachá (Token) na "porta".
 - **Rejeição sumária**: Se o crachá estiver expirado, for falso ou não existir, a porta não abre. A conexão é recusada com `1008 Policy Violation`, protegendo o servidor de abusos.
 
-### 4. Saindo do sistema (Logout / Revogação)
-- **Regra**: Quando o usuário clica em "Sign out", o sistema destrói as mensagens sensíveis da tela do chat e joga o crachá do navegador fora.
-- **Revogação (Poder Administrativo)**: Graças ao mecanismo de tracking no banco, a administração do sistema possui o poder de "**Revogar**" a sessão de um usuário a qualquer instante antes dos 7 dias, derrubando a conexão dele em tempo-real.
+### 4. Resiliência do Sistema (XSS e CSRF)
+- **Regra**: O sistema precisa rodar invisível a falhas humanas do desenvolvedor e ataques da rede. 
+- **O Fim do XSS:** O crachá do usuário (Token) não fica salvo em `LocalStorage`. O Frontend não consegue lê-lo de jeito nenhum (`HttpOnly Cookie`). Mesmo se a página for invadida por código malicioso, o token está protegido.
+- **Defesa CSRF Automática:** Usando a diretiva de cookies moderna `SameSite=Lax`, o site previne instintivamente ataques de Forja de Autenticação. Nem o pior hacker consegue obrigar o browser a enviar seu cookie secreto caso não esteja ativamente navegando pelo domínio oficial.
 
 ---
 
@@ -175,6 +176,6 @@ Acesse `http://localhost:5173`:
 - [x] `ErrorBoundary` para erros de render
 - [x] `setErrorHandler` global no Fastify (sem stack traces em produção)
 - [x] **[TESTS]** TypeScript + ESLint + Vitest Unit Tests 100% passando no pre-commit gate
-- [x] **[PHASE 4.1]** Migração para `HttpOnly` Cookies resolvendo risco de XSS, eliminando `?token=` da query do WebSocket e proxy nativo no Vite.
+- [x] **[PHASE 4.1]** Migração para `HttpOnly` Cookies: Aniquila Risco de XSS (JS não lê o Cookie) e de CSRF (`SameSite=Lax` bloqueia requests externas), além de garantir Proxy nativo e transparente no Vite.
 - [ ] DB session check no WS (JWT stateless funcionando; DB check → Fase 5 com Redis)
 - [ ] Endpoint `DELETE /api/auth/session` para revogação via API (Fase 5)
