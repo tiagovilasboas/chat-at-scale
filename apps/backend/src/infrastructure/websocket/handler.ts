@@ -2,9 +2,6 @@ import { FastifyInstance } from 'fastify';
 import { BroadcastMessageUseCase } from '../../application/use-cases/broadcast-message';
 import { BackfillMessagesUseCase } from '../../application/use-cases/backfill-messages';
 import jwt from 'jsonwebtoken';
-import { db } from '../db';
-import { sessions } from '../db/schema';
-import { eq, and, isNull } from 'drizzle-orm';
 
 const broadcastUseCase = new BroadcastMessageUseCase();
 const backfillUseCase = new BackfillMessagesUseCase();
@@ -20,30 +17,18 @@ export function setupWebSocketRoutes(fastify: FastifyInstance) {
       return connection.socket.close(1008, 'Policy Violation');
     }
 
+    // Stateless JWT verification: validate signature and expiry.
+    // TODO(Phase 5): Add Redis session cache check here to support instant revocation at scale.
+    // Tracking: https://github.com/tiagovilasboas/chat-at-scale/issues (create issue when Redis is added)
     let decoded: any;
     try {
       decoded = jwt.verify(token, JWT_SECRET);
-    } catch (err) {
-      fastify.log.warn(`Unauthorized WSS attempt: Invalid Cryptographic JWT`);
+    } catch {
+      fastify.log.warn('Unauthorized WSS attempt: Invalid or expired JWT');
       return connection.socket.close(1008, 'Policy Violation');
     }
 
-    // Stateful DB Layer Isolation check: (Is the session actively tracked?)
-    const [activeSession] = await db.select().from(sessions)
-      .where(
-        and(
-          eq(sessions.token, token),
-          isNull(sessions.revokedAt)
-        )
-      ).limit(1);
-
-    if (!activeSession || activeSession.expiresAt < new Date()) {
-      fastify.log.warn(`Revoked or Expired session token used by ${decoded.userId}`);
-      return connection.socket.close(1008, 'Session Revoked');
-    }
-
     const userId = decoded.userId;
-    
     fastify.log.info(`User connected: ${userId} to Room: Global`);
     connection.socket.send(JSON.stringify({ type: 'connected', user: userId }));
 
