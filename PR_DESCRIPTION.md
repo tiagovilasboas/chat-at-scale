@@ -40,8 +40,13 @@ src/
 │   └── store/         # useChatStore — banco local de mensagens
 ```
 
-#### Por que Zustand e não Context API?
-Usávamos `useState` cascateado que forçava prop-drilling pelo `App.tsx`. Usar Context API resolveria o prop-drilling, mas causaria re-renders em toda a árvore. O **Zustand** cria um store fora da árvore do React.
+#### Zustand vs Context API vs Padrão Singleton Vanilla
+Usávamos `useState` cascateado que forçava prop-drilling pelo `App.tsx`. A evolução natural seria a **Context API**, contudo ela amarra o estado à React Tree inteira, engatilhando re-renders globais desnecessários e ferindo a performance sistêmica do chat.
+
+*"Por que então não usar um Singleton baseado em Classes (Vanilla JS)?"*
+Se usássemos um Singleton estático clássico (`AuthService.getInstance()`), a "reatividade" seria quebrada. O motor do React é cego a mutações de variáveis em Classes Vanilla. Para forçar o React a "escutar" um Singleton externo, seríamos forçados a acoplar lógicas de `EventEmitter` (Pub/Sub) e `useSyncExternalStore` manualmente.
+
+O **Zustand** atua exatamente como um Singleton externalizado perfeito da React Tree, mas injeta nativamente o padrão `Pub/Sub` resolvendo a engrenharia reativa. Ele nos permite atualizações cirúrgicas: hooks que escutam exclusivamente a variável `token` se atualizam, sem vazar renderizações pesadas para elementos que só escutam o `username`.
 
 Além disso, usamos o middleware `persist` do Zustand:
 ```ts
