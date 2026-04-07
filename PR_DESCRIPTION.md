@@ -11,7 +11,7 @@ A autenticação foi desenhada para garantir uma experiência fluída, segura e 
 ### 2. Entrando no sistema (Login)
 - **Regra**: O usuário provê credenciais corretas e recebe uma **Autorização de 7 dias** (representada pelo token JWT).
 - **Rastreabilidade**: Ao longo desses 7 dias, a sessão do usuário fica rastreada no banco de dados. Isso permite saber exatamente quantos dispositivos o usuário conectou.
-- **Experiência (Frontend)**: Uma vez logado, o "Crachá" (Token) fica gravado no navegador. Se o usuário fechar a aba e voltar amanhã, ele será **direcionado imediatamente para o Chat**, sem passar pela tela de login de novo.
+- **Experiência (Frontend)**: Uma vez logado, o "Crachá" invisível (Cookie HttpOnly) é armazendo pelo Navegador e a UI guarda os metadados do Usuário em Cache rápido. Se o usuário fechar a aba e voltar amanhã, ele será **direcionado imediatamente para o Chat**, sem piscar a tela de login.
 
 ### 3. Conectando ao Chat (A Porta do WebSocket)
 - **Regra de Acesso**: O Chat não confia em ninguém. Ao tentar abrir a conexão via WebSocket, o usuário deve apresentar o seu Crachá (Token) na "porta".
@@ -51,7 +51,7 @@ O **Zustand** atua exatamente como um Singleton externalizado perfeito da React 
 
 Além disso, usamos o middleware `persist` do Zustand:
 ```ts
-localStorage["chat-auth"] = { state: { session: { token, userId, username } } }
+localStorage["chat-auth"] = { state: { session: { userId, username } } }
 ```
 Com isso, no próximo boot a sessão é reidratada **antes do primeiro render**, eliminando o flash de "tela de login" para quem já estava logado. Zero requisições de rede no boot, zero `useEffect` de reidratação.
 
@@ -72,8 +72,8 @@ Em dev, o React StrictMode monta e desmonta o `useEffect` duas vezes instantanea
 
 ```
 POST /api/auth/register  →  cria users row (password_hash via scrypt)
-POST /api/auth/login     →  verifica hash → gera JWT → salva em sessions
-                            retorna: { token, userId, username }
+POST /api/auth/login     →  verifica hash → gera JWT (Cookie HttpOnly) → salva sessions
+                            retorna: { userId, username }
 ```
 
 ### Sessão no Banco de Dados (Backend)
@@ -93,7 +93,7 @@ sessions (
 ### Gateway WebSocket (Backend)
 
 ```
-ws://host:8080/ws?token=<JWT>
+ws://host:8080/ws (com Cookie HttpOnly anexado pelo Browser)
   ↓
 1. Token presente? → não: close(1008)
 2. Assinatura JWT válida? → não: close(1008)
@@ -101,7 +101,7 @@ ws://host:8080/ws?token=<JWT>
 4. Aguarda mensagem `{ type: 'sync', cursor: N }` → responde com mensagens perdidas
 ```
 
-O token vai no query param porque browsers não permitem headers customizados em WebSocket upgrades.
+O Token flui sem atrito porque o Navegador anexa Cookies nativamente na rota da mesma Origem/Proxy (Fastify) no upgrade do WebSocket. Zero envio manual pelo Javascript.
 
 ### Variáveis de Ambiente
 
@@ -169,7 +169,7 @@ Acesse `http://localhost:5173`:
 
 - [x] Registro e login sem lib de auth terceirizada (node:crypto scrypt + jsonwebtoken)
 - [x] Sessão persistida no PostgreSQL (`expires_at`, `revoked_at`)
-- [x] Token no frontend via Zustand persist (zero localStorage manual)
+- [x] Metadados da Sessão via Zustand persist (Token isolado e protegido puramente no HttpOnly Cookie)
 - [x] Logout limpa sessão local e estado de chat
 - [x] Gateway WS valida JWT antes de alocar memória
 - [x] Variáveis de ambiente via `.env` (gitignored) + `.env.example`
