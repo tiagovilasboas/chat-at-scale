@@ -7,13 +7,13 @@ const backfillUseCase = new BackfillMessagesUseCase();
 const DEFAULT_CONVERSATION = '11111111-1111-1111-1111-111111111111';
 
 export function setupWebSocketRoutes(fastify: FastifyInstance) {
-  fastify.get('/ws', { websocket: true }, (connection, req) => {
-    const userId = (req.query as any).userId || `Guest_${Math.floor(Math.random() * 1000)}`;
+  fastify.get('/ws', { websocket: true }, (connection: any, req: any) => {
+    const userId = req.query.userId || `Guest_${Math.floor(Math.random() * 1000)}`;
     
     fastify.log.info(`User connected: ${userId} to Room: Global`);
     connection.socket.send(JSON.stringify({ type: 'connected', user: userId }));
 
-    connection.socket.on('message', async (rawMessage) => {
+    connection.socket.on('message', async (rawMessage: any) => {
       fastify.log.info(`Received from ${userId}: ${rawMessage}`);
       
       try {
@@ -58,8 +58,8 @@ export function setupWebSocketRoutes(fastify: FastifyInstance) {
           }
         });
 
-      } catch (err) {
-        fastify.log.error('Failed to process socket message: ', err);
+      } catch (err: any) {
+        fastify.log.error(err, 'Failed to process socket message');
       }
     });
 

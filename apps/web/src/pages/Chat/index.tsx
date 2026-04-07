@@ -51,15 +51,15 @@ export function Chat() {
         })
       } else if (data.type === 'sync_result' && data.messages) {
         setMessages((prev) => {
-          const received = data.messages.map((m: any) => ({
+          const received = data.messages.map((m: Message) => ({
             id: m.id,
             sequence: m.sequence,
-            sender: m.senderId,
+            sender: m.senderId || m.sender,
             content: m.content
           }));
           
-          const deduplicated = received.filter((newMsg: any) => !prev.some(p => p.id === newMsg.id));
-          const combined = [...prev, ...deduplicated].sort((a: any, b: any) => (a.sequence || 0) - (b.sequence || 0));
+          const deduplicated = received.filter((newMsg: Message) => !prev.some(p => p.id === newMsg.id));
+          const combined = [...prev, ...deduplicated].sort((a: Message, b: Message) => (a.sequence || 0) - (b.sequence || 0));
           return combined;
         });
       }
