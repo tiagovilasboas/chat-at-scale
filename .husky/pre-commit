@@ -1,0 +1,10 @@
+echo "🛡️  [BACKEND] Validando Tipagens (Type-Check)..."
+npm run typecheck --workspace=apps/backend || { echo "❌ Backend falhou na tipagem!"; exit 1; }
+
+echo "🛡️  [FRONTEND] Rodando Linter (ESLint)..."
+npm run lint --workspace=apps/web || { echo "❌ Frontend falhou no Lint!"; exit 1; }
+
+echo "🛡️  [FRONTEND] Validando Tipagens (React TS)..."
+npm run build --workspace=apps/web || { echo "❌ Frontend falhou no TypeCheck/Build!"; exit 1; }
+
+echo "✅ Todos os GATES passaram! Commit autorizado."

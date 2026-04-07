@@ -1,8 +1,3 @@
----
-description: Principal Engineering rules for chat-at-scale: system thinking, trade-offs, failure handling
-alwaysApply: true
----
-
 # Principal Engineering Rules
 
 This project designs a distributed messaging system, not a chat UI. Every decision must reflect system thinking and explicit trade-offs.
@@ -21,6 +16,20 @@ When writing any text (docs, comments, PR descriptions, explanations), always co
 
 Transmit this mindset in every response. Be the Staff/Principal voice: rigorous, human, trade-off aware.
 
+## Tech Stack & Core Architecture
+
+This repository executes a Scalable Monorepo architecture enforcing rigorous invariants:
+
+- **Backend (Gateway & Messaging)**: `apps/backend/`
+  - Stack: Node.js + Fastify + `@fastify/websocket` (chosen for optimal Event Loop scaling to 50k connections).
+  - **Architecture**: Minimal Clean Architecture (`src/domain`, `src/application`, `src/infrastructure`). Never couple the business rules (like Fan-out and Sequences) to Fastify handles.
+  - **Database (Write-Through)**: PostgreSQL 16 + **Drizzle ORM**. Invariant MUST be respected: every incoming message must be persisted atomically to generate its `sequence` BEFORE the WebSocket fan-out occurs.
+
+- **Frontend (Client Node)**: `apps/web/`
+  - Stack: React 19 + Vite leveraging the **React Compiler** preset for absolute rendering optimization without memo overhead.
+  - **Architecture**: Organized into `app/`, `features/`, `pages/`, `hooks/`, mimicking enterprise layout modularity.
+  - **UI System**: **TailwindCSS v4** natively integrated with **Shadcn UI**.
+
 ## Before Implementing (Gate)
 
 Do NOT code until docs 01-10 exist: problem, invariants, trade-offs, architecture, messaging model, scalability, failure scenarios, frontend, observability, evolution. See docs/pt-br/00-principal-engineering-rules.md for the full checklist.
@@ -35,10 +44,17 @@ Always consider: delivery guarantees, ordering, retries, deduplication, offline 
 
 Frontend is a distributed system node. Handle: optimistic updates, reconciliation, duplicates, out-of-order, temporary inconsistency.
 
+## Security & Authentication
+
+- **Guard at the Gates:** WebSockets must aggressively enforce authentication during the initial handshake (via ticket/token in query or standard headers). If invalid, drop immediately.
+- **Strict Authorization:** Never process a broadcast or fetch history without actively querying the DB/Cache to validate if the user formally belongs to the `conversationId` (Conversation Membership isolation).
+- **No Trust on Client State:** The frontend is merely a view layer. Payload timestamps, `sequence` generation, and overall truth are **Always** dictated by the Backend.
+
 ## Scalability and Failure
 
-- Ask: 10 users? 10k? 1M? Consider fan-out, bottlenecks, state under load
-- Assume network drops, duplicates, delays, partial failures. Design recovery before happy path
+- **Stateless Logical Gateway:** Even though WebSockets hold physical connections in-memory, the Gateway routing and Fan-out mechanics must be **Stateless**. To support 50k users, the architecture depends on a central Event Bus/Message Broker (like NATS or Redis Pub/Sub), not local broadcasting arrays.
+- Ask: 10 users? 10k? 1M? Consider fan-out, IO bottlenecks, state under load.
+- Assume network drops, duplicates, delays, partial failures. Design recovery before happy path (e.g. Always plan for the **Backfill mechanism**: clients syncing missing messages using their last known `sequence` upon reconnection).
 
 ## Done
 

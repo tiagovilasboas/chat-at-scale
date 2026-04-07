@@ -1,0 +1,22 @@
+{
+  "name": "chat-at-scale",
+  "version": "1.0.0",
+  "description": "> Dor real, solução real. O desafio de projetar mensageria em tempo real que escala de verdade.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
