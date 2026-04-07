@@ -125,7 +125,15 @@ Para rodar localmente no ambiente de desenvolvimento:
    ```
 
 O cliente React estará disponível em `http://localhost:5173`.
-A Topologia e fluxo lógico estão detalhados em [04 Arquitetura](./docs/pt-br/04-architecture.md) e [ADR 0001](./docs/adr/0001-initial-tech-stack-and-persistence.md).
+A Topologia e fluxo lógico estão detalhados em [04 Arquitetura](./docs/pt-br/04-architecture.md) e o racional das escolhas no [ADR 005](./docs/adr/005-initial-tech-stack-and-persistence.md).
+
+---
+
+## Estrutura Multi-Agents (AI Driven)
+
+Este repositório adota configurações de engajamento assíncrono para LLMs de última geração (Claude Code, Cursor, Windsurf).
+- As diretrizes globais da arquitetura Staff/Principal residem no `CLAUDE.md`.
+- As matrizes segmentadas especializadas (Frontend, Backend, QA) residem na pasta estrita `.agents/personas/`. Quando utilizar IAs para refatorações setoriais, recomende-as importar diretamente seus manuais isolados limitando o blast radius arquitetural.
 
 ---
 
