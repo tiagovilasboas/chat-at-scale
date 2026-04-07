@@ -1,14 +1,48 @@
 import { FastifyInstance } from 'fastify';
 import { BroadcastMessageUseCase } from '../../application/use-cases/broadcast-message';
 import { BackfillMessagesUseCase } from '../../application/use-cases/backfill-messages';
+import jwt from 'jsonwebtoken';
+import { db } from '../db';
+import { sessions } from '../db/schema';
+import { eq, and, isNull } from 'drizzle-orm';
 
 const broadcastUseCase = new BroadcastMessageUseCase();
 const backfillUseCase = new BackfillMessagesUseCase();
 const DEFAULT_CONVERSATION = '11111111-1111-1111-1111-111111111111';
+const JWT_SECRET = process.env.JWT_SECRET || 'staff_principal_secret';
 
 export function setupWebSocketRoutes(fastify: FastifyInstance) {
-  fastify.get('/ws', { websocket: true }, (connection: any, req: any) => {
-    const userId = req.query.userId || `Guest_${Math.floor(Math.random() * 1000)}`;
+  fastify.get('/ws', { websocket: true }, async (connection: any, req: any) => {
+    const token = req.query.token;
+
+    if (!token) {
+      fastify.log.warn('Unauthorized WSS attempt: Missing token parameter');
+      return connection.socket.close(1008, 'Policy Violation');
+    }
+
+    let decoded: any;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      fastify.log.warn(`Unauthorized WSS attempt: Invalid Cryptographic JWT`);
+      return connection.socket.close(1008, 'Policy Violation');
+    }
+
+    // Stateful DB Layer Isolation check: (Is the session actively tracked?)
+    const [activeSession] = await db.select().from(sessions)
+      .where(
+        and(
+          eq(sessions.token, token),
+          isNull(sessions.revokedAt)
+        )
+      ).limit(1);
+
+    if (!activeSession || activeSession.expiresAt < new Date()) {
+      fastify.log.warn(`Revoked or Expired session token used by ${decoded.userId}`);
+      return connection.socket.close(1008, 'Session Revoked');
+    }
+
+    const userId = decoded.userId;
     
     fastify.log.info(`User connected: ${userId} to Room: Global`);
     connection.socket.send(JSON.stringify({ type: 'connected', user: userId }));
