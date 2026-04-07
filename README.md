@@ -1,140 +1,64 @@
-# Chat at Scale
+# 🚀 Chat at Scale - A Staff-Level Architecture
 
-> Dor real, solução real. O desafio de projetar mensageria em tempo real que escala de verdade.
+> Um laboratório de Engenharia de Software Avançada, focado em alta disponibilidade, resiliência assíncrona e integração nativa com Ecossistemas de Múltiplos Agentes de IA.
 
----
+## 🎯 A Filosofia (Principal Engineering)
+Este repositório não é um "tutorial de Websockets". É uma resposta estrutural aos problemas reais de aplicações em hiperescala (10k - 50k conexões simultâneas). Nós documentamos os *trade-offs*, banimos as *magic-boxes* e operamos sob as restrições mais brutais de confiabilidade:
+* **Zero-Trust Client**: O servidor confia dogmaticamente no banco de dados, nunca nos *timestamps* ou metadados de UI do frontend.
+* **Fallacies of Distributed Computing**: Desenhamos a mecânica de *recuperação* (Backfill) preventivamente para assumir quedas drásticas de conectividade.
+* **Estado Monotônico (Sequence)**: A escalabilidade começa pela ordenação inquebrável atômica das mensagens no armazenamento relacional, isolando os Brokers de conflitos *race-conditions*.
 
-## De onde veio isso
+## 🏗️ Topologia e Módulos (Monorepo)
 
-Esse projeto nasceu de uma pergunta de processo seletivo: *"Como você escalaria uma aplicação XPTO?"* Resolvi responder a sério usando chat como caso: em vez de só falar no abstract, montei um design completo com docs, ADRs e referências, e usei isso como portfolio de pensamento técnico.
+O ecossistema é gerenciado globalmente via **NPM Workspaces**, blindando contextos estritos:
 
-**Por que chat?** Chat é um dos tipos de aplicação completa mais complexos que existem. Exige real-time, consistência, fan-out, reconexão, frontend como nó do sistema, observabilidade, evolução em escala. Não é CRUD com WebSocket grudado. Exercita tudo o que um Staff/Principal precisa saber: sistemas distribuídos, trade-offs, falhas, invariantes. Casos reais (Slack, Discord, WhatsApp) mostram que o problema é sério.
+### 1. `apps/backend` (Gateway & Mensageria)
+*   **Stack**: Node.js + Fastify + `@fastify/websocket` (Priorizando I/O de alta densidade).
+*   **Database**: PostgreSQL 16 + Drizzle ORM.
+*   **Design Pattern**: Clean Architecture Base (Domain, UseCases, Infrastructure). O fluxo de rede Fastify jamais penetra nas regras de negócio estritas.
+*   **Write-Through Persistence**: Toda mensagem toca o disco e recebe uma `sequence` atômica *antes* de sofrer o *fan-out* broadcast para os sockets abertos, prevenindo perda catastrófica de histórico durante quedas fatais do Node Master.
 
----
+### 2. `apps/web` (Client Node)
+*   **Stack**: React 19 + React Compiler + Vite
+*   **UI/UX**: TailwindCSS v4 + Shadcn UI Primitives
+*   **Resiliência Ativa**: O frontend atua como um nó distribuído inteligente. Em cada evento de reconexão `ws.onopen()`, ele varre a matriz, calcula dinamicamente o seu *Cursor Local* e dispara explicitamente um **Hydration Sync Request** (Backfill) focado em injetar linearmente o GAP de mensagens perdidas.
 
-## O que rola aqui
+## 🤖 Ecossistema Multi-Agentes (AI-Native Ecosystem)
+Este repositório foi construído e configurado estruturalmente para Agentes de Inteligência Artificial de Nível 3 (Claude Code, Cursor, Windsurf) habitarem.
+* **Diretrizes Globais do Staff**: Todas residentes no `CLAUDE.md`, limitando impulsos sintéticos e focando IAs a mapearem os gargalos antes do I/O de escrita.
+* **Módulos de Personas Diferenciadas**: Armazenadas na pasta secreta `.agents/personas/`, temos arquitetos de escopo hiper-focado (Frontend, Backend, DBA e QA/Safety). Ao cruzar LLMs locais a este repositório, delegamos seus *System Prompts* para lerem esses arquivos nativamente, limitando e otimizando exponencialmente a capacidade de raciocínio.
 
-A maioria dos chats em tempo real são CRUDs com WebSocket grudado. Esse aqui não: é pensado como **sistema distribuído** desde o início, porque em escala é isso que ele vira.
-
-O problema? Construir uma plataforma de mensagens que vai de MVP até 10k–50k conexões e 1k–2k msg/s, sem ter que reescrever tudo no meio do caminho. Fan-out, backfill, at-least-once, reconexão, falhas de rede… tudo isso entra no design desde o dia um.
-
-**Pra quem é:** Todo dev curioso de saber como eng de liderança técnica pensa e age. ([O que o mercado chama de Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md))
-
-**O que esperar:** Guia de referência, não material didático. Funciona bem pra quem já tem base em sistemas distribuídos e quer entender o mindset Staff/Principal. Junior, Pleno e Senior podem dar uma olhada como preview, mas quem mais aproveita é quem já está no nível de liderança técnica ou quer cair de cabeça nessa jornada: o primeiro usa como referência e benchmark; o segundo, como mapa do que virá e de como quem já está lá pensa.
-
----
-
-## A demanda de negócio (o clássico)
-
-*"Precisamos de um chat que escale com o negócio. Não podemos perder mensagens, travar em pico ou parar tudo pra refazer quando a base dobrar."*
-
----
-
-## A trilha (por onde começar)
-
-**Mindset Staff/Principal:** Nunca pule para implementação antes de entender o problema. Problema primeiro, invariantes, trade-offs, arquitetura, só então código. Essa regra permeia toda a documentação.
-
-Se você quer entender como eng de liderança técnica pensa e age, segue essa ordem:
-
-1. **Começo** (~10 min) - [00 Regras Principais](./docs/pt-br/00-principal-engineering-rules.md) e [01 Definição do Problema](./docs/pt-br/01-problem-definition.md)
-2. **Fundamentos** (~20 min) - [02 Invariantes](./docs/pt-br/02-system-invariants.md), [03 Trade-offs](./docs/pt-br/03-trade-offs.md), [04 Arquitetura](./docs/pt-br/04-architecture.md)
-3. **Contrato e escala** (~20 min) - [05 Modelo de Mensagens](./docs/pt-br/05-messaging-model.md) e [06 Escalabilidade](./docs/pt-br/06-scalability.md)
-4. **Resiliência** (~30 min) - [07 Cenários de Falha](./docs/pt-br/07-failure-scenarios.md), [08 Frontend](./docs/pt-br/08-frontend-as-a-system.md), [09 Observabilidade](./docs/pt-br/09-observability.md)
-5. **Visão de longo prazo** (~10 min) - [10 Evolução](./docs/pt-br/10-evolution.md)
-6. **Referência** (~20 min) - [O que é Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md), [Casos de Mensageria](./docs/pt-br/11-casos-mensageria.md), [SLOs](./docs/pt-br/slos.md), [Glossário](./docs/pt-br/glossario.md), [ADRs](./docs/adr/)
-
-*Tempos estimados para leitura em ritmo técnico (~200 palavras/min). Trilha completa (01-10): ~1h30.*
-
-O gate é simples: **não implemente até ter os docs 01-10 prontos**. Problema primeiro, código depois. Simples assim.
+## 🛡️ Segurança e Qualidade Contínua (CI)
+1. **Autenticação Stateful Defensiva**: Nós rechaçamos arquiteturas de Sockets publicamente ignorantes esperando um pacote de credenciais JSON ("*Slowloris Attack Loop*"). Nosso Token JWT é trocado assincronamente via API HTTP (`/api/auth`) e injetado mandatoriamente na *QueryString* do Socket (`ws://?token=XYZ`). Todo pacote de memória do Servidor restringe o acesso através de consultas criptográficas rápidas às sessões do Postgres.
+2. **Husky Pipelines**: *Pre-commit hooks* blindados em V8. É sistemicamente bloqueado enviar código ferindo os *Gates* assíncronos do TypeScript (`tsc --noEmit`) ou quebrando as barreiras modulares de Renderização do `Eslint`.
 
 ---
 
-## O que estamos construindo
+## 🚦 Como Rodar Localmente
 
-| Capacidade | Alvo |
-|------------|------|
-| **Real-time** | Entrega sub-segundo (P99 < 500ms em escala) |
-| **Channels & groups** | Conversas com múltiplos participantes |
-| **Delivery** | At-least-once; sem perda silenciosa |
-| **Resiliência** | Backfill na reconexão; tolerância a falhas |
-| **Escala** | 10k–50k conexões; 1k–2k msg/s |
+1. **Pré-requisitos Operacionais**:
+   * Node.js v20+ / Docker / Docker Compose
 
-Gateway (WebSocket), Messaging (persist, sequence, fan-out), Persistence e o cliente como nó do sistema. Detalhes em [04 Arquitetura](./docs/pt-br/04-architecture.md).
-
----
-
-## Casos que todo eng de liderança técnica deveria conhecer
-
-**Mensageria:** [Slack, Discord, WhatsApp](./docs/pt-br/11-casos-mensageria.md), cada um com link pro artigo original.
-
-**Frontend:** [19 casos](https://frontend-architecture-playbook-eight.vercel.app/guides/cases), Netflix, Spotify, Shopify, eBay e outros.
-
-Guarde pra usar em reunião, ADR ou proposta. Números e fontes reais.
-
----
-
-## Documentação completa
-
-[docs/pt-br](./docs/pt-br/). Tudo em português, termos técnicos em inglês.
-
-| # | Doc |
-|---|-----|
-| 00 | [Regras Principais](./docs/pt-br/00-principal-engineering-rules.md) |
-| 01 | [Definição do Problema](./docs/pt-br/01-problem-definition.md) |
-| 02 | [Invariantes](./docs/pt-br/02-system-invariants.md) |
-| 03 | [Trade-offs](./docs/pt-br/03-trade-offs.md) |
-| 04 | [Arquitetura](./docs/pt-br/04-architecture.md) |
-| 05 | [Modelo de Mensagens](./docs/pt-br/05-messaging-model.md) |
-| 06 | [Escalabilidade](./docs/pt-br/06-scalability.md) |
-| 07 | [Cenários de Falha](./docs/pt-br/07-failure-scenarios.md) |
-| 08 | [Frontend como Sistema](./docs/pt-br/08-frontend-as-a-system.md) |
-| 09 | [Observabilidade](./docs/pt-br/09-observability.md) |
-| 10 | [Evolução](./docs/pt-br/10-evolution.md) |
-| 11 | [Casos de Mensageria](./docs/pt-br/11-casos-mensageria.md) |
-| 12 | [O que é Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md) |
-| - | [SLOs](./docs/pt-br/slos.md) · [Glossário](./docs/pt-br/glossario.md) · [ADRs](./docs/adr/) |
-
-Contribuindo: [CONTRIBUTING.md](CONTRIBUTING.md) (gate, checklist de feature pronta).
-
----
-
-## Executando (MVP Fase 1)
-
-O código base inicial (Clean Architecture) já está implementado contendo: **PostgreSQL**, **API Gateway (Fastify WS)** e **Cliente Web (React Vite / Shadcn UI)**.
-
-Para rodar localmente no ambiente de desenvolvimento:
-
-1. **Suba a infraestrutura do banco de dados:**
+2. **Iniciando a Infraestrutura**:
    ```bash
-   docker compose up -d
+   docker-compose up -d
    ```
-2. **Instale as dependências (NPM Workspaces):**
+   *O cluster do PostgreSQL 16 será iniciado e atachado permanentemente à porta 5432.*
+
+3. **Injeção de Migrações de Banco (MVP)**:
    ```bash
-   # Na pasta raiz
-   npm install
+   npm i
+   cd apps/backend
+   npx drizzle-kit push
    ```
-3. **Execute as Migrations (Drizzle) e inicie os servidores:**
-   ```bash
-   cd apps/backend && npx drizzle-kit push && cd ../.. 
-   ```
-4. **Suba o Frontend e o Backend em paralelo:**
-   Abra dois terminais na raiz:
+
+4. **Boot dos Workspaces**:
+   Volte para a raiz e engatilhe ambos os containers node paralelamente:
    ```bash
    npm run dev --workspace=apps/backend
    npm run dev --workspace=apps/web
    ```
 
-O cliente React estará disponível em `http://localhost:5173`.
-A Topologia e fluxo lógico estão detalhados em [04 Arquitetura](./docs/pt-br/04-architecture.md) e o racional das escolhas no [ADR 005](./docs/adr/005-initial-tech-stack-and-persistence.md).
+O cliente do App Web estará responsivo aguardando interação em **[http://localhost:5173](http://localhost:5173)**, servindo à retaguarda blindada do interceptor WSS no Node `ws://localhost:8080/ws`.
 
----
-
-## Estrutura Multi-Agents (AI Driven)
-
-Este repositório adota configurações de engajamento assíncrono para LLMs de última geração (Claude Code, Cursor, Windsurf).
-- As diretrizes globais da arquitetura Staff/Principal residem no `CLAUDE.md`.
-- As matrizes segmentadas especializadas (Frontend, Backend, QA) residem na pasta estrita `.agents/personas/`. Quando utilizar IAs para refatorações setoriais, recomende-as importar diretamente seus manuais isolados limitando o blast radius arquitetural.
-
----
-
-Feito com ❤️ por [**Tiago Vilas Boas**](https://github.com/tiagovilasboas) e uma galera de agentes co-pilotos. [MIT](LICENSE)
+> *Consulte as Atas Arquiteturais Oficiais (ADRs) documentando profundamente como preterimos bibliotecas mágicas em prol da Engenharia de Raiz visitando os sub-diretórios presentes em **`docs/adr/`**.*
