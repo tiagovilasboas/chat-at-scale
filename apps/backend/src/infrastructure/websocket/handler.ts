@@ -14,7 +14,7 @@ export function setupWebSocketRoutes(fastify: FastifyInstance) {
     const token = req.cookies?.token;
 
     if (!token) {
-      fastify.log.warn('Unauthorized WSS attempt: Missing token parameter');
+      fastify.log.warn('Unauthorized WSS attempt: Missing token cookie');
       return connection.socket.close(1008, 'Policy Violation');
     }
 
