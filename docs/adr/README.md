@@ -1,10 +1,8 @@
 # Architecture Decision Records (ADRs)
 
-Decisões arquiteturais formais do projeto. Cada ADR documenta contexto, decisão, alternativas e consequências.
+Índice. Cada ADR: contexto, decisão, alternativas, consequências. Não apague: marque Substituído.
 
-## Template
-
-Use o template em [template.md](./template.md) para novos ADRs.
+Template: [template.md](./template.md). Mapa: [docs/README.md](../README.md).
 
 ## Índice
 
@@ -16,8 +14,6 @@ Use o template em [template.md](./template.md) para novos ADRs.
 | [004](./004-persistencia-write-through.md) | Persistência write-through | Aceito |
 | [005](./005-initial-tech-stack-and-persistence.md) | Definição da Stack Inicial MVP | Aceito |
 | [006](./006-defer-auth-for-backfill-sync.md) | Adiamento Autenticação vs Backfill | Aceito |
-
-
 
 ## Regras
 
