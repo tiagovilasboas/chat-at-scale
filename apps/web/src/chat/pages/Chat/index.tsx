@@ -33,7 +33,7 @@ function formatTime(date?: Date) {
   return (date ?? new Date()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
-export function Chat({ session, onLogout }: { session: Session; onLogout: () => void }) {
+export function Chat({ session, onLogout }: { session: Session; onLogout: () => void | Promise<void> }) {
   const [input, setInput] = useState('')
   const bottomRef = useRef<HTMLDivElement>(null)
   const messages = useChatStore(s => s.messages)
