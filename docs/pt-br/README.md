@@ -1,9 +1,8 @@
-# Documentação : Português (pt-BR)
+# Documentação (pt-BR)
 
-Tradução para português brasileiro da documentação de design do sistema de mensagens em tempo real.
+Índice do design: sistema de mensagens em tempo real. Termos técnicos (WebSocket, fan-out, at-least-once, backfill) permanecem em inglês.
 
-> **Nota:** Termos técnicos (WebSocket, fan-out, at-least-once, backfill, etc.) permanecem em inglês nas traduções.
-> **Staff/Principal:** Cada doc inclui um callout sobre como atuar nesse nível. Regra de ouro: jamais pule para implementação antes de entender o problema. Problema primeiro, código depois.
+Comece em [01 Definição do Problema](./01-problem-definition.md). Gate: problema primeiro, código depois. Mapa na raiz: [README.md](../../README.md).
 
 ---
 
@@ -38,7 +37,3 @@ Tradução para português brasileiro da documentação de design do sistema de 
 4. **Resiliência e operação:** [07 - Cenários de Falha](./07-failure-scenarios.md) → [08 - Frontend](./08-frontend-as-a-system.md) → [09 - Observabilidade](./09-observability.md)
 5. **Visão de longo prazo:** [10 - Evolução](./10-evolution.md)
 6. **Referência:** [11 - Casos](./11-casos-mensageria.md) · [12 - Staff/Principal](./12-staff-principal-o-que-e.md) · [SLOs](./slos.md) · [Glossário](./glossario.md) · [ADRs](../adr/)
-
----
-
-Termos técnicos permanecem em inglês (WebSocket, fan-out, backfill, etc.).

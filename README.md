@@ -1,140 +1,125 @@
 # Chat at Scale
 
-> Dor real, solução real. O desafio de projetar mensageria em tempo real que escala de verdade.
+Real-time messaging designed as a distributed system from day one: persist and mint `sequence` before fan-out, backfill on reconnect, no silent loss. MVP now; 10k–50k connections and 1k–2k msg/s without a rewrite.
 
----
+Laboratório Staff de mensageria: chat não é CRUD com WebSocket grudado.
 
-## De onde veio isso
+Maintainer: [Tiago Montanha](https://github.com/tiagovilasboas) · Staff · Distributed Systems · Observability
 
-Esse projeto nasceu de uma pergunta de processo seletivo: *"Como você escalaria uma aplicação XPTO?"* Resolvi responder a sério usando chat como caso: em vez de só falar no abstract, montei um design completo com docs, ADRs e referências, e usei isso como portfolio de pensamento técnico.
+## Start
 
-**Por que chat?** Chat é um dos tipos de aplicação completa mais complexos que existem. Exige real-time, consistência, fan-out, reconexão, frontend como nó do sistema, observabilidade, evolução em escala. Não é CRUD com WebSocket grudado. Exercita tudo o que um Staff/Principal precisa saber: sistemas distribuídos, trade-offs, falhas, invariantes. Casos reais (Slack, Discord, WhatsApp) mostram que o problema é sério.
+Two doors. Pick one.
 
----
+**Run the MVP** (PostgreSQL + Fastify WebSocket gateway + React client):
 
-## O que rola aqui
+```bash
+docker compose up -d
+npm install
+cd apps/backend && npx drizzle-kit push && cd ../..
+```
 
-A maioria dos chats em tempo real são CRUDs com WebSocket grudado. Esse aqui não: é pensado como **sistema distribuído** desde o início, porque em escala é isso que ele vira.
+Two terminals from the repo root:
 
-O problema? Construir uma plataforma de mensagens que vai de MVP até 10k–50k conexões e 1k–2k msg/s, sem ter que reescrever tudo no meio do caminho. Fan-out, backfill, at-least-once, reconexão, falhas de rede… tudo isso entra no design desde o dia um.
+```bash
+npm run dev --workspace=apps/backend
+npm run dev --workspace=apps/web
+```
 
-**Pra quem é:** Todo dev curioso de saber como eng de liderança técnica pensa e age. ([O que o mercado chama de Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md))
+Client: `http://localhost:5173`. Topology: [04 Architecture](./docs/pt-br/04-architecture.md). Stack rationale: [ADR 005](./docs/adr/005-initial-tech-stack-and-persistence.md).
 
-**O que esperar:** Guia de referência, não material didático. Funciona bem pra quem já tem base em sistemas distribuídos e quer entender o mindset Staff/Principal. Junior, Pleno e Senior podem dar uma olhada como preview, mas quem mais aproveita é quem já está no nível de liderança técnica ou quer cair de cabeça nessa jornada: o primeiro usa como referência e benchmark; o segundo, como mapa do que virá e de como quem já está lá pensa.
+**Read first** if you want the Staff trail (problem → invariants → code). Gate: do not add a capability until docs 01–10 are honest.
 
----
+| Block | Time | Start here |
+|---|---|---|
+| Problem | ~10 min | [00 Rules](./docs/pt-br/00-principal-engineering-rules.md) · [01 Problem](./docs/pt-br/01-problem-definition.md) |
+| Fundamentals | ~20 min | [02 Invariants](./docs/pt-br/02-system-invariants.md) · [03 Trade-offs](./docs/pt-br/03-trade-offs.md) · [04 Architecture](./docs/pt-br/04-architecture.md) |
+| Contract and scale | ~20 min | [05 Messaging model](./docs/pt-br/05-messaging-model.md) · [06 Scalability](./docs/pt-br/06-scalability.md) |
+| Resilience | ~30 min | [07 Failure](./docs/pt-br/07-failure-scenarios.md) · [08 Frontend as a node](./docs/pt-br/08-frontend-as-a-system.md) · [09 Observability](./docs/pt-br/09-observability.md) |
+| Horizon | ~10 min | [10 Evolution](./docs/pt-br/10-evolution.md) |
+| Reference | ~20 min | [Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md) · [Messaging cases](./docs/pt-br/11-casos-mensageria.md) · [SLOs](./docs/pt-br/slos.md) · [Glossary](./docs/pt-br/glossario.md) · [ADRs](./docs/adr/) |
 
-## A demanda de negócio (o clássico)
+Trail 01–10 is about 1h30 at a technical pace (~200 wpm).
 
-*"Precisamos de um chat que escale com o negócio. Não podemos perder mensagens, travar em pico ou parar tudo pra refazer quando a base dobrar."*
+## Contents
 
----
+- [Why this case](#why-this-case)
+- [What we are building](#what-we-are-building)
+- [Docs](#docs)
+- [Cases](#cases)
+- [Related](#related)
+- [Agents](#agents)
+- [Contributing](#contributing)
+- [License](#license)
 
-## A trilha (por onde começar)
+## Why this case
 
-**Mindset Staff/Principal:** Nunca pule para implementação antes de entender o problema. Problema primeiro, invariantes, trade-offs, arquitetura, só então código. Essa regra permeia toda a documentação.
+An interview asked *how would you scale XPTO?* I answered with a full design (docs, ADRs, public cases) instead of a whiteboard shrug. Chat is the case because it is one of the hardest complete systems you can pick: real-time, consistency, fan-out, reconnect, the frontend as a node, observability, evolution under load. Slack, Discord, and WhatsApp are the public proof.
 
-Se você quer entender como eng de liderança técnica pensa e age, segue essa ordem:
+Most “real-time chats” are CRUDs with a socket taped on. This one is not. At 10k–50k connections it is a distributed system, so the design starts there: delivery, ordering, retries, dedup, offline, recovery before the happy path.
 
-1. **Começo** (~10 min) - [00 Regras Principais](./docs/pt-br/00-principal-engineering-rules.md) e [01 Definição do Problema](./docs/pt-br/01-problem-definition.md)
-2. **Fundamentos** (~20 min) - [02 Invariantes](./docs/pt-br/02-system-invariants.md), [03 Trade-offs](./docs/pt-br/03-trade-offs.md), [04 Arquitetura](./docs/pt-br/04-architecture.md)
-3. **Contrato e escala** (~20 min) - [05 Modelo de Mensagens](./docs/pt-br/05-messaging-model.md) e [06 Escalabilidade](./docs/pt-br/06-scalability.md)
-4. **Resiliência** (~30 min) - [07 Cenários de Falha](./docs/pt-br/07-failure-scenarios.md), [08 Frontend](./docs/pt-br/08-frontend-as-a-system.md), [09 Observabilidade](./docs/pt-br/09-observability.md)
-5. **Visão de longo prazo** (~10 min) - [10 Evolução](./docs/pt-br/10-evolution.md)
-6. **Referência** (~20 min) - [O que é Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md), [Casos de Mensageria](./docs/pt-br/11-casos-mensageria.md), [SLOs](./docs/pt-br/slos.md), [Glossário](./docs/pt-br/glossario.md), [ADRs](./docs/adr/)
+The business ask is the usual one: scale with the product, do not drop messages, do not freeze on a spike, do not halt to rewrite when the base doubles.
 
-*Tempos estimados para leitura em ritmo técnico (~200 palavras/min). Trilha completa (01-10): ~1h30.*
+## What we are building
 
-O gate é simples: **não implemente até ter os docs 01-10 prontos**. Problema primeiro, código depois. Simples assim.
+| Capability | Target |
+|---|---|
+| **Real-time** | Sub-second delivery (P99 < 500ms at scale) |
+| **Channels and groups** | Multi-participant conversations |
+| **Delivery** | At-least-once; no silent loss |
+| **Resilience** | Backfill on reconnect; tolerate partial failure |
+| **Scale** | 10k–50k connections; 1k–2k msg/s |
 
----
+Gateway (WebSocket), Messaging (persist, sequence, fan-out), Persistence, and the client as a system node. Details in [04 Architecture](./docs/pt-br/04-architecture.md).
 
-## O que estamos construindo
+Invariant that must not drift: every inbound message is persisted atomically to mint its `sequence` **before** WebSocket fan-out.
 
-| Capacidade | Alvo |
-|------------|------|
-| **Real-time** | Entrega sub-segundo (P99 < 500ms em escala) |
-| **Channels & groups** | Conversas com múltiplos participantes |
-| **Delivery** | At-least-once; sem perda silenciosa |
-| **Resiliência** | Backfill na reconexão; tolerância a falhas |
-| **Escala** | 10k–50k conexões; 1k–2k msg/s |
+## Docs
 
-Gateway (WebSocket), Messaging (persist, sequence, fan-out), Persistence e o cliente como nó do sistema. Detalhes em [04 Arquitetura](./docs/pt-br/04-architecture.md).
-
----
-
-## Casos que todo eng de liderança técnica deveria conhecer
-
-**Mensageria:** [Slack, Discord, WhatsApp](./docs/pt-br/11-casos-mensageria.md), cada um com link pro artigo original.
-
-**Frontend:** [19 casos](https://frontend-architecture-playbook-eight.vercel.app/guides/cases), Netflix, Spotify, Shopify, eBay e outros.
-
-Guarde pra usar em reunião, ADR ou proposta. Números e fontes reais.
-
----
-
-## Documentação completa
-
-[docs/pt-br](./docs/pt-br/). Tudo em português, termos técnicos em inglês.
+Design docs are Portuguese first; technical terms stay in English. Index: [docs/pt-br](./docs/pt-br/). Decisions: [docs/adr](./docs/adr/).
 
 | # | Doc |
-|---|-----|
-| 00 | [Regras Principais](./docs/pt-br/00-principal-engineering-rules.md) |
-| 01 | [Definição do Problema](./docs/pt-br/01-problem-definition.md) |
-| 02 | [Invariantes](./docs/pt-br/02-system-invariants.md) |
+|---|---|
+| 00 | [Principal engineering rules](./docs/pt-br/00-principal-engineering-rules.md) |
+| 01 | [Problem definition](./docs/pt-br/01-problem-definition.md) |
+| 02 | [System invariants](./docs/pt-br/02-system-invariants.md) |
 | 03 | [Trade-offs](./docs/pt-br/03-trade-offs.md) |
-| 04 | [Arquitetura](./docs/pt-br/04-architecture.md) |
-| 05 | [Modelo de Mensagens](./docs/pt-br/05-messaging-model.md) |
-| 06 | [Escalabilidade](./docs/pt-br/06-scalability.md) |
-| 07 | [Cenários de Falha](./docs/pt-br/07-failure-scenarios.md) |
-| 08 | [Frontend como Sistema](./docs/pt-br/08-frontend-as-a-system.md) |
-| 09 | [Observabilidade](./docs/pt-br/09-observability.md) |
-| 10 | [Evolução](./docs/pt-br/10-evolution.md) |
-| 11 | [Casos de Mensageria](./docs/pt-br/11-casos-mensageria.md) |
-| 12 | [O que é Staff/Principal](./docs/pt-br/12-staff-principal-o-que-e.md) |
-| - | [SLOs](./docs/pt-br/slos.md) · [Glossário](./docs/pt-br/glossario.md) · [ADRs](./docs/adr/) |
+| 04 | [Architecture](./docs/pt-br/04-architecture.md) |
+| 05 | [Messaging model](./docs/pt-br/05-messaging-model.md) |
+| 06 | [Scalability](./docs/pt-br/06-scalability.md) |
+| 07 | [Failure scenarios](./docs/pt-br/07-failure-scenarios.md) |
+| 08 | [Frontend as a system](./docs/pt-br/08-frontend-as-a-system.md) |
+| 09 | [Observability](./docs/pt-br/09-observability.md) |
+| 10 | [Evolution](./docs/pt-br/10-evolution.md) |
+| 11 | [Messaging cases](./docs/pt-br/11-casos-mensageria.md) |
+| 12 | [What Staff/Principal means](./docs/pt-br/12-staff-principal-o-que-e.md) |
+| - | [SLOs](./docs/pt-br/slos.md) · [Glossary](./docs/pt-br/glossario.md) · [ADRs](./docs/adr/) |
 
-Contribuindo: [CONTRIBUTING.md](CONTRIBUTING.md) (gate, checklist de feature pronta).
+## Cases
 
----
+Messaging: [Slack, Discord, WhatsApp](./docs/pt-br/11-casos-mensageria.md), each with a link to the original write-up.
 
-## Executando (MVP Fase 1)
+Frontend: [19 cases](https://frontend-architecture-playbook-eight.vercel.app/guides/cases) (Netflix, Spotify, Shopify, eBay, and others).
 
-O código base inicial (Clean Architecture) já está implementado contendo: **PostgreSQL**, **API Gateway (Fastify WS)** e **Cliente Web (React Vite / Shadcn UI)**.
+Numbers and sources, not opinions. Useful in a review, an ADR, or a design meeting.
 
-Para rodar localmente no ambiente de desenvolvimento:
+## Related
 
-1. **Suba a infraestrutura do banco de dados:**
-   ```bash
-   docker compose up -d
-   ```
-2. **Instale as dependências (NPM Workspaces):**
-   ```bash
-   # Na pasta raiz
-   npm install
-   ```
-3. **Execute as Migrations (Drizzle) e inicie os servidores:**
-   ```bash
-   cd apps/backend && npx drizzle-kit push && cd ../.. 
-   ```
-4. **Suba o Frontend e o Backend em paralelo:**
-   Abra dois terminais na raiz:
-   ```bash
-   npm run dev --workspace=apps/backend
-   npm run dev --workspace=apps/web
-   ```
+This repo is the older Staff lab: distributed messaging, invariants, and failure before the happy path. The agentic showcase is a sibling set, not a rewrite of this system.
 
-O cliente React estará disponível em `http://localhost:5173`.
-A Topologia e fluxo lógico estão detalhados em [04 Arquitetura](./docs/pt-br/04-architecture.md) e o racional das escolhas no [ADR 005](./docs/adr/005-initial-tech-stack-and-persistence.md).
+- [awesome-agentic-ai](https://github.com/tiagovilasboas/awesome-agentic-ai) — curated MCP · harness · HITL
+- [jarvis-architecture](https://github.com/tiagovilasboas/jarvis-architecture) — brain · workers · ops
+- [agent-measurement](https://github.com/tiagovilasboas/agent-measurement) — measure agents, do not train
+- [agentic-code-review](https://github.com/tiagovilasboas/agentic-code-review) — AppSec `path:line` or silence
+- [Frontend Architecture Playbook](https://frontend-architecture-playbook-eight.vercel.app) — frontend as a system node
 
----
+## Agents
 
-## Estrutura Multi-Agents (AI Driven)
+[`CLAUDE.md`](./CLAUDE.md) holds the Staff/Principal invariants. Scoped personas live in [`.agents/personas/`](./.agents/personas/) (frontend, backend, QA, DBA). Load one persona at a time so a refactor does not leak across the blast radius.
 
-Este repositório adota configurações de engajamento assíncrono para LLMs de última geração (Claude Code, Cursor, Windsurf).
-- As diretrizes globais da arquitetura Staff/Principal residem no `CLAUDE.md`.
-- As matrizes segmentadas especializadas (Frontend, Backend, QA) residem na pasta estrita `.agents/personas/`. Quando utilizar IAs para refatorações setoriais, recomende-as importar diretamente seus manuais isolados limitando o blast radius arquitetural.
+## Contributing
 
----
+See [CONTRIBUTING.md](CONTRIBUTING.md). A feature is done only when the happy path *and* recovery work, trade-offs are written down, failure is named, and each invariant has a test or a check.
 
-Feito com ❤️ por [**Tiago Vilas Boas**](https://github.com/tiagovilasboas) e uma galera de agentes co-pilotos. [MIT](LICENSE)
+## License
+
+[MIT](LICENSE)
