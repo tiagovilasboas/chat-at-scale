@@ -16,7 +16,8 @@ export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
       session: null,
-      login: (session) => set({ session }),
+      login: (session: Session) => set({ session }),
+      // Local UI cleanup only. HTTP logout (cookie + DB revoke) lives in App.
       logout: () => {
         // Dynamically import to avoid circular dependency
         import('@/chat/store/chatStore').then(({ useChatStore }) => {
@@ -26,7 +27,8 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: 'chat-auth', // localStorage key
+      name: 'chat-auth',
+      partialize: (state): Pick<AuthStore, 'session'> => ({ session: state.session }),
     }
   )
 )

@@ -15,6 +15,7 @@ export function Login({ onLogin }: { onLogin: (session: Session) => void }) {
     e.preventDefault()
     setError('')
     if (!username || !password) return setError('Please fill in all fields.')
+    if (password.length < 8) return setError('Password must be at least 8 characters.')
 
     setLoading(true)
     try {

@@ -35,9 +35,10 @@ describe('Auth Store (Zustand)', () => {
     
     expect(result.current.session).toEqual(mockSession);
     
-    // Check if it was persisted to localStorage
+    // Persist only UI metadata — never a JWT / token
     const savedState = JSON.parse(localStorage.getItem('chat-auth') || '{}');
     expect(savedState.state.session).toEqual(mockSession);
+    expect(savedState.state.session).not.toHaveProperty('token');
   });
 
   it('should clear session on logout', async () => {
@@ -57,5 +58,17 @@ describe('Auth Store (Zustand)', () => {
     });
     
     expect(result.current.session).toBeNull();
+
+    const savedState = JSON.parse(localStorage.getItem('chat-auth') || '{}');
+    expect(savedState.state.session).toBeNull();
+  });
+
+  it('never persists a token field on the session object', () => {
+    const { result } = renderHook(() => useAuthStore());
+    act(() => {
+      result.current.login({ userId: 'user-1', username: 'testuser' });
+    });
+    const raw = localStorage.getItem('chat-auth') || '';
+    expect(raw).not.toMatch(/"token"/);
   });
 });
