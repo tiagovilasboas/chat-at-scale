@@ -127,7 +127,7 @@ A autenticação opera em **duas camadas complementares de persistência**, foca
 
 Ao fazer login (usando Node Native `scrypt` hash system), o servidor cria um registro na tabela `sessions` (`token`, `expires_at`, `revoked_at`). O JWT master gerado é então empacotado e enviado de volta ao Chrome por um **Cookie `HttpOnly`**: blindado, imutável e 100% invisível ao Javascript frontend. Se por ventura um hacker injetar pacotes NPM maliciosos (XSS), seu Token não poderá ser clonado da memória local.
 
-**Expiração Dupla**: O JWT nativamente carrega a diretiva `expiresIn: 7d` (Validado Sem I/O de Banco, escalável e Rápido no WS Gateway). O banco adicionalmente checa o `revoked_at`, propiciando revogabilidade forçada em nível administrativo.
+**Expiração Dupla (modelo, não o handshake WS atual)**: o JWT carrega `expiresIn: 7d` e o gateway valida assinatura + `exp` **sem** I/O de banco. A tabela `sessions` guarda `expires_at` e `revoked_at`. `POST /api/auth/logout` limpa o cookie HttpOnly e marca `revoked_at`. O WebSocket **ainda não** consulta essa row (Fase 5: cache Redis). Até lá, um JWT obtido por outro canal permanece válido até o `exp`.
 
 ### Camada 2 — Frontend (Zustand Persist → Local Metadata)
 

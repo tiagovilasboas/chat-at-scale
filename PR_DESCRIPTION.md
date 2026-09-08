@@ -109,6 +109,7 @@ O Token flui sem atrito porque o Navegador anexa Cookies nativamente na rota da 
 |---|---|---|
 | `apps/backend/.env` | `JWT_SECRET` | `staff_principal_secret` |
 | `apps/backend/.env` | `DATABASE_URL` | `postgres://chat:password@localhost:5432/chat_at_scale` |
+| `apps/backend/.env` | `CORS_ORIGIN` | `http://localhost:5173` |
 | `apps/web/.env` | `VITE_API_URL` | `http://localhost:8080` |
 | `apps/web/.env` | `VITE_WS_URL` | `ws://localhost:8080` |
 
@@ -135,7 +136,7 @@ Acesse `http://localhost:5173`:
 1. **Registro**: clique em "Create a new account", preencha username e password, envie
 2. **Login**: volte para Sign in, use as mesmas credenciais
 3. **Chat**: após login, o chat abre com status verde quando o WebSocket conecta
-4. **Logout**: "Sign out" limpa a sessão local e retorna ao Login
+4. **Logout**: "Sign out" chama `POST /api/auth/logout` (limpa o cookie e seta `sessions.revoked_at`) e depois apaga os metadados no Zustand
 
 ---
 
@@ -170,12 +171,11 @@ Acesse `http://localhost:5173`:
 - [x] Registro e login sem lib de auth terceirizada (node:crypto scrypt + jsonwebtoken)
 - [x] Sessão persistida no PostgreSQL (`expires_at`, `revoked_at`)
 - [x] Metadados da Sessão via Zustand persist (Token isolado e protegido puramente no HttpOnly Cookie)
-- [x] Logout limpa sessão local e estado de chat
-- [x] Gateway WS valida JWT antes de alocar memória
+- [x] Logout chama `POST /api/auth/logout`: limpa cookie HttpOnly **e** seta `sessions.revoked_at`
+- [x] Gateway WS valida JWT (cookie) antes de alocar memória
 - [x] Variáveis de ambiente via `.env` (gitignored) + `.env.example`
 - [x] `ErrorBoundary` para erros de render
 - [x] `setErrorHandler` global no Fastify (sem stack traces em produção)
 - [x] **[TESTS]** TypeScript + ESLint + Vitest Unit Tests 100% passando no pre-commit gate
 - [x] **[PHASE 4.1]** Migração para `HttpOnly` Cookies: Aniquila Risco de XSS (JS não lê o Cookie) e de CSRF (`SameSite=Lax` bloqueia requests externas), além de garantir Proxy nativo e transparente no Vite.
-- [ ] DB session check no WS (JWT stateless funcionando; DB check → Fase 5 com Redis)
-- [ ] Endpoint `DELETE /api/auth/session` para revogação via API (Fase 5)
+- [ ] DB session check no WS (JWT stateless funcionando; DB/Redis check → Fase 5). Logout já revoga a row; o gateway ainda não lê isso.
