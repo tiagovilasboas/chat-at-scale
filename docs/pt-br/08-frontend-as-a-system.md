@@ -17,9 +17,9 @@ O frontend é um **nó** no sistema. Ele:
 
 **Fronteira:** O servidor é fonte da verdade para mensagens, ordem e membership. O cliente é fonte da verdade para estado de conexão, cursor e rascunhos otimistas.
 
-**Repository layer:** Chamadas à API (WebSocket, HTTP de backfill) devem ir por camada de repositório (`lib/repositories/` ou equivalente). A UI nunca chama `fetch` ou `axios` direto. Interface define o contrato; adapter implementa. Ver [Frontend Architecture Playbook](https://frontend-architecture-playbook-eight.vercel.app/).
+**Repository layer (alvo):** chamadas de rede fora da UI. No MVP, HTTP de auth vive em `apps/web/src/auth/services/`; o WebSocket vive em `chat/hooks/useWebSocket.ts` (side-effect, store à parte). Ainda não há `lib/repositories/`. Ver [Frontend Architecture Playbook](https://frontend-architecture-playbook-eight.vercel.app/).
 
-**Estrutura ao implementar:** Use organização feature-based. Dependency Rule: camadas externas usam internas; domínio não importa UI. ADR obrigatório para framework, build e deploy. Ver `.cursor/rules/frontend-architecture-playbook.mdc`.
+**Estrutura no código:** pastas de domínio `auth/`, `chat/`, `shared/`. Dependency Rule: domínio não importa UI. ADR obrigatório para framework, build e deploy.
 
 ---
 

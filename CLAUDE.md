@@ -21,14 +21,15 @@ Transmit this mindset in every response. Be the Staff/Principal voice: rigorous,
 This repository executes a Scalable Monorepo architecture enforcing rigorous invariants:
 
 - **Backend (Gateway & Messaging)**: `apps/backend/`
-  - Stack: Node.js + Fastify + `@fastify/websocket` (chosen for optimal Event Loop scaling to 50k connections).
-  - **Architecture**: Minimal Clean Architecture (`src/domain`, `src/application`, `src/infrastructure`). Never couple the business rules (like Fan-out and Sequences) to Fastify handles.
-  - **Database (Write-Through)**: PostgreSQL 16 + **Drizzle ORM**. Invariant MUST be respected: every incoming message must be persisted atomically to generate its `sequence` BEFORE the WebSocket fan-out occurs.
+  - Stack: Node.js + Fastify + `@fastify/websocket` (Event Loop is the *reason* for the choice at 10k–50k; the running MVP is a single process).
+  - **Architecture**: Minimal Clean Architecture (`src/domain`, `src/application`, `src/infrastructure`). Never couple Fan-out and Sequences to Fastify handles.
+  - **Database (Write-Through)**: PostgreSQL 16 + **Drizzle ORM**. Invariant: persist and mint `sequence` BEFORE WebSocket fan-out.
+  - **MVP honesty**: one hardcoded conversation; fan-out is `websocketServer.clients` (not an Event Bus); `conversation_members` is unused; WS handshake verifies JWT only (no `sessions.revoked_at`).
 
 - **Frontend (Client Node)**: `apps/web/`
-  - Stack: React 19 + Vite leveraging the **React Compiler** preset for absolute rendering optimization without memo overhead.
-  - **Architecture**: Organized into `app/`, `features/`, `pages/`, `hooks/`, mimicking enterprise layout modularity.
-  - **UI System**: **TailwindCSS v4** natively integrated with **Shadcn UI**.
+  - Stack: React 19 + Vite with the **React Compiler** preset.
+  - **Architecture**: domain folders `auth/`, `chat/`, `shared/` (pages, stores, hooks under each). Not `app/` + `features/`.
+  - **UI System**: **TailwindCSS v4** + **Shadcn UI**.
 
 ## Before Implementing (Gate)
 
@@ -52,7 +53,7 @@ Frontend is a distributed system node. Handle: optimistic updates, reconciliatio
 
 ## Scalability and Failure
 
-- **Stateless Logical Gateway:** Even though WebSockets hold physical connections in-memory, the Gateway routing and Fan-out mechanics must be **Stateless**. To support 50k users, the architecture depends on a central Event Bus/Message Broker (like NATS or Redis Pub/Sub), not local broadcasting arrays.
+- **Stateless Logical Gateway (design):** physical sockets are in-memory; routing/fan-out must not assume a single process. At 10k–50k the architecture needs an Event Bus (NATS or Redis Pub/Sub). The **running MVP broadcasts locally**. Do not document the bus as implemented.
 - Ask: 10 users? 10k? 1M? Consider fan-out, IO bottlenecks, state under load.
 - Assume network drops, duplicates, delays, partial failures. Design recovery before happy path (e.g. Always plan for the **Backfill mechanism**: clients syncing missing messages using their last known `sequence` upon reconnection).
 

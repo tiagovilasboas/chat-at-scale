@@ -15,7 +15,7 @@ Use o template em [template.md](./template.md) para novos ADRs.
 | [003](./003-ordem-total-por-conversa.md) | Ordem total por conversa | Aceito |
 | [004](./004-persistencia-write-through.md) | Persistência write-through | Aceito |
 | [005](./005-initial-tech-stack-and-persistence.md) | Definição da Stack Inicial MVP | Aceito |
-| [006](./006-defer-auth-for-backfill-sync.md) | Adiamento Autenticação vs Backfill | Aceito |
+| [006](./006-defer-auth-for-backfill-sync.md) | Adiamento Autenticação vs Backfill | Aceito (histórico; evoluído por 007) |
 | [007](./007-persisted-gateway-authentication.md) | Autenticação persistida no gateway (HttpOnly + sessions) | Aceito (parcial) |
 
 

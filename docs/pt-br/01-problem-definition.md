@@ -45,7 +45,7 @@ Um **desafio de sistemas distribuídos**: toda decisão envolve trade-offs expl�
 
 | Fora do escopo | Motivo |
 |----------------|--------|
-| **Autenticação e autorização** | Assume camada existente (OAuth, JWT) |
+| **Autenticação e autorização (design original)** | O doc assumia OAuth/JWT já existentes. **Fase 4 do lab** colocou sessão no gateway (cookie HttpOnly + JWT). Isolamento por membership (INV-002) e revogação no handshake WS **continuam design**, não o MVP. Ver [ADR 007](../adr/007-persisted-gateway-authentication.md). |
 | **UI/UX do cliente** | Foco em backend, protocolo, infraestrutura |
 | **Criptografia ponta-a-ponta (E2EE)** | Possível extensão futura |
 | **Mídia** (arquivos, imagens, áudio) | Possível extensão : foco inicial em texto |

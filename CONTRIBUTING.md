@@ -1,6 +1,6 @@
 # Contribuindo
 
-Obrigado pelo interesse. Este projeto segue as regras de Principal Engineering e Frontend Architecture Playbook.
+Obrigado pelo interesse. Este repositório é um lab Staff de mensageria (docs/ADRs como produto). Regras: [00 - Principal Engineering](./docs/pt-br/00-principal-engineering-rules.md). Contrato para IA: [AGENTS.md](./AGENTS.md).
 
 ## Gate: antes de implementar
 
@@ -48,4 +48,5 @@ Ver [02 - Invariantes](./docs/pt-br/02-system-invariants.md) (Checklist de valid
 ## Referências
 
 - [00 - Regras Principais](./docs/pt-br/00-principal-engineering-rules.md)
-- [.cursor/rules](./.cursor/rules/) (Principal Engineering, Frontend Playbook)
+- [AGENTS.md](./AGENTS.md) · [CLAUDE.md](./CLAUDE.md)
+- [Frontend Architecture Playbook](https://frontend-architecture-playbook-eight.vercel.app/) (frontend como nó; evidência, não template deste repo)
