@@ -1,9 +1,10 @@
 # Documentação : Português (pt-BR)
 
-Tradução para português brasileiro da documentação de design do sistema de mensagens em tempo real.
+Documentação de design do sistema de mensagens em tempo real (português primeiro).
 
-> **Nota:** Termos técnicos (WebSocket, fan-out, at-least-once, backfill, etc.) permanecem em inglês nas traduções.
-> **Staff/Principal:** Cada doc inclui um callout sobre como atuar nesse nível. Regra de ouro: jamais pule para implementação antes de entender o problema. Problema primeiro, código depois.
+> **Nota:** Termos técnicos (WebSocket, fan-out, at-least-once, backfill, etc.) permanecem em inglês.
+> **Staff/Principal:** Cada doc inclui um callout sobre como atuar nesse nível. Regra de ouro: jamais pule para implementação antes de entender o problema.
+> **Lab vs design:** o que `apps/` executa hoje é nó único (uma conversa, fan-out in-memory, JWT no WS sem ler `revoked_at`). Os docs 01–10 descrevem o sistema-alvo. Não leia a tabela de 10k–50k conexões como capacidade medida. Mapa: [README na raiz](../../README.md).
 
 ---
 
