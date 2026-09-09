@@ -1,21 +1,32 @@
 {
   "name": "chat-at-scale",
   "version": "1.0.0",
-  "description": "> Dor real, solução real. O desafio de projetar mensageria em tempo real que escala de verdade.",
-  "main": "index.js",
+  "description": "Staff lab: real-time messaging as a distributed system. Docs and ADRs are the product.",
+  "private": true,
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "db:push": "npm exec --workspace=apps/backend -- drizzle-kit push",
+    "typecheck": "npm run typecheck --workspace=apps/backend && npm run typecheck --workspace=apps/web",
+    "lint": "npm run lint --workspace=apps/web",
+    "test": "npm run test --workspace=apps/backend && npm run test --workspace=apps/web",
+    "ci": "npm run typecheck && npm run lint && npm test",
     "prepare": "husky"
   },
   "workspaces": [
     "apps/*"
   ],
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "distributed-systems",
+    "realtime",
+    "websocket",
+    "staff-engineer"
+  ],
+  "author": "Tiago Vilas Boas",
+  "license": "MIT",
   "devDependencies": {
     "husky": "^9.1.7"
   }

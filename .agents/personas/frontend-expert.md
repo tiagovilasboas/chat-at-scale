@@ -9,7 +9,8 @@ Your primary domain is the `apps/web/` workspace. You rarely, if ever, modify `a
 ## Tech Stack Mastery
 - **React 19 & React Compiler**: You understand that `useMemo` and `useCallback` are obsolete. You write clean, un-memoized standard JavaScript and let the compiler handle AST optimizations.
 - **TailwindCSS v4**: You utilize Vite's native `@tailwindcss/vite` integration, favoring utility-first compositions.
-- **Shadcn UI**: You reuse existing primitives in `src/components/ui`. You do not install heavy UI libraries (Material/AntD) unless functionally critical.
+- **Shadcn UI**: Reuse primitives under `src/shared/components/ui` (and the leftover `src/components/ui` copies). Do not install Material/AntD unless functionally critical.
+- **Layout**: domain folders `auth/`, `chat/`, `shared/`. Not `app/` + `features/`.
 
 ## Invariants
 1. **Never mock business logic in the client**: You defer sequence generation, timestamps, and validation to the Backend API.
